@@ -1,0 +1,82 @@
+﻿@page "/create"
+
+<PageTitle>Create new form</PageTitle>
+
+<div class="w-full h-full grid grid-cols-3 gap-2">
+    <span>Components</span>
+    <span>Form</span>
+    <span>Edit selected component</span>
+
+    <div id="element-picker" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4">
+        @foreach (var compType in PickerComponents)
+        {
+            <span class="p-4 bg-primary text-primary-foreground rounded-md text-center align-middle"
+                  draggable="true"
+                  @ondragstart="@(() => OnPickerDragStart(compType))"
+                  @ondragend="OnDragEnd">
+                @compType.Name
+            </span>
+        }
+    </div>
+
+    <!-- Builder container with explicit drop zones -->
+    <div id="builder" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-graph-paper" @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true">
+        @foreach (var (idx, builderItem) in _builderItems.Index())
+        {
+            <div class="drop-zone h-full grow p-4 rounded-md border-2 border-dashed border-secondary bg-background"
+                 @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true"
+                 @ondrop="@(e => OnDropAt(idx))">
+            </div>
+
+            <span class="relative p-4 bg-primary text-primary-foreground rounded-md text-center align-middle"
+                  draggable="true"
+                  @ondragstart="@(() => OnBuilderDragStart(idx))"
+                  @ondragend="OnDragEnd">
+
+                <span>
+                    @builderItem.Label
+                </span>
+
+                <span
+                    class="order-badge absolute top-0 left-[5px] w-[20px] rounded-b-md bg-secondary text-secondary-foreground p-1 text-xs rounded-bl-md">
+                    @(idx + 1)
+                </span>
+
+                <span @onclick="@(() => EditItem(idx))"
+                      class="absolute top-0 right-[15px] cursor-pointer bg-cyan-500 text-white p-1 text-xs"
+                      draggable="false">
+                    ✎
+                </span>
+
+                <span @onclick="@(() => RemoveItem(idx))"
+                      class="absolute top-0 right-0 cursor-pointer bg-destructive text-destructive-foreground p-1 text-xs rounded-tr-sm"
+                      draggable="false">
+                    X
+                </span>
+            </span>
+        }
+
+        <div class="drop-zone h-full grow p-4 rounded-md border-2 border-dashed border-secondary bg-background"
+             @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true"
+             @ondrop="@(e => OnDropAt(_builderItems.Count))">
+        </div>
+    </div>
+
+    <Card id="edit-panel" class="border-2 border-dashed">
+        @if (CurrentlyEditing is not null)
+        {
+            <Header>
+                <CardTitle>Editing: @CurrentlyEditing.Label @(_builderItems.IndexOf(CurrentlyEditing) + 1)</CardTitle>
+            </Header>
+            <Content>
+                <EditSelectedComponent Component="CurrentlyEditing" ComponentChanged="StateHasChanged"/>
+            </Content>
+        }
+    </Card>
+</div>
+
+@* TODO: play button to preview the form experience; select mobile / desktop view *@
+@* TODO: save and load forms *@
+@* TODO: default values *@
+@* TODO: readme *@
+@* TODO: grids? *@

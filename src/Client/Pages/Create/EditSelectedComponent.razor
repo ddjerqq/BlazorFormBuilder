@@ -1,0 +1,72 @@
+﻿@using Client.Components.Ui.Form
+
+<AppForm Model="Component" ModelChanged="ComponentChanged">
+    <FormField>
+        <FormLabel>Label</FormLabel>
+        <FormInputText @bind-Value="@Component.Label" required/>
+        <FormDescription>Edit the label text</FormDescription>
+    </FormField>
+
+    <FormField>
+        <FormLabel>Required?</FormLabel>
+        <Switch @bind-Value="@Component.Required"/>
+        <FormDescription>Whether or not this field is required</FormDescription>
+    </FormField>
+
+    @if (Component is TextInput textInput)
+    {
+        <FormField>
+            <FormLabel>Input type</FormLabel>
+            <select id="input-type"
+                    @onchange="@(arg => textInput.InputType = arg.Value?.ToString() ?? "text")"
+                    class="@FormInputText.BaseClass">
+                @foreach (var value in (string[])["text", "tel", "url", "password", "search"])
+                {
+                    <option value="@value">@value</option>
+                }
+            </select>
+        </FormField>
+
+        <FormField>
+            <FormLabel>Placeholder text</FormLabel>
+            <FormInputText @bind-Value="@textInput.Placeholder"/>
+            <FormDescription>Edit the placeholder  text</FormDescription>
+        </FormField>
+    }
+
+    @if (Component is NumberInput numberInput)
+    {
+        <span>InputType</span>
+        <span>Min</span>
+        <span>Max</span>
+        <span>Step</span>
+    }
+
+    @if (Component is SelectInput selectInput)
+    {
+        <span>Choices edit here</span>
+    }
+
+    @if (Component is CheckboxInput checkboxInput)
+    {
+    }
+
+    @if (Component is DateInput dateInput)
+    {
+        <span>InputType</span>
+    }
+
+    @if (Component is Button button)
+    {
+        <span>ButtonText</span>
+    }
+
+</AppForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public BaseComponentChoice Component { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<BaseComponentChoice> ComponentChanged { get; set; }
+}

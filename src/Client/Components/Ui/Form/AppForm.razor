@@ -53,6 +53,8 @@
         if (EditContext is null)
         {
             EditContext = new EditContext(Model!);
+            EditContext.OnFieldChanged +=
+                (sender, args) => InvokeAsync(() => ModelChanged.InvokeAsync(Model));
             EditContext.SetFieldCssClassProvider(ValidationCssClassProvider);
         }
     }
