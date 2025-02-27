@@ -1,0 +1,10 @@
+﻿@using System.ComponentModel.DataAnnotations
+@inherits UiComponentBase
+
+<div @attributes="AdditionalAttributes" class="@(Merge("bg-border shrink-0", Orientation == "horizontal" ? "h-[1px] w-full" : "min-h-full w-[1px]"))" ></div>
+
+@code {
+    [Parameter]
+    [AllowedValues("horizontal", "vertical")]
+    public string Orientation { get; set; } = "horizontal";
+}

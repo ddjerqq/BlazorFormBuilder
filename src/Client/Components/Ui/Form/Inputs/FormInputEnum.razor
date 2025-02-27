@@ -1,0 +1,32 @@
+﻿@using System.Linq.Expressions
+@inherits UiComponentBase
+@typeparam TEnum where TEnum : Enum
+
+<InputSelect
+    TValue="TEnum"
+    Value="@Value"
+    ValueExpression="@ValueExpression"
+    ValueChanged="@ValueChanged"
+    @attributes="AdditionalAttributes"
+    class="@(Merge(FormInputText.BaseClass))">
+    @foreach (var option in Options)
+    {
+        <option value="@option">@option.ToString()</option>
+    }
+
+    @ChildContent
+</InputSelect>
+
+@code {
+    [Parameter]
+    public TEnum Value { get; set; } = default!;
+
+    [Parameter]
+    public Expression<Func<TEnum>>? ValueExpression { get; set; }
+
+    [Parameter]
+    public EventCallback<TEnum> ValueChanged { get; set; }
+
+    [Parameter, EditorRequired]
+    public IEnumerable<TEnum> Options { get; set; } = [];
+}

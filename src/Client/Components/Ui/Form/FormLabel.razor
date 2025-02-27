@@ -1,0 +1,10 @@
+﻿@inherits UiComponentBase
+
+<label @attributes="@AdditionalAttributes"
+       class="@Tw.Merge(BaseClass, Class)">
+    @ChildContent
+</label>
+
+@code {
+    public const string BaseClass = "text-sm font-medium leading-none select-none";
+}

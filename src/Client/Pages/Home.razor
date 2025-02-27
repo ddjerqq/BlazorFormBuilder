@@ -1,0 +1,30 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+@* <h1>Hello, world!</h1> *@
+@* *@
+@* Welcome to your new app. *@
+@* *@
+@* // canvas must have grid pattern *@
+@* // each item in the canvas must have a dotted rounded border *@
+
+
+<div>
+    <div>
+        <div draggable="true" @ondragstart="@(() => HandleDragStart("inline"))">Inline Box</div>
+        <div draggable="true" @ondragstart="@(() => HandleDragStart("regular"))">Regular Box</div>
+    </div>
+
+    <CanvasGrid @ref="_canvasGrid" />
+</div>
+
+@code {
+    private CanvasGrid? _canvasGrid;
+
+    private void HandleDragStart(string boxType)
+    {
+        Console.WriteLine(boxType);
+        _canvasGrid?.SetDraggingBoxType(boxType);
+    }
+}

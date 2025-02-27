@@ -1,0 +1,6 @@
+﻿@inherits UiComponentBase
+
+<p @attributes="@AdditionalAttributes"
+   class="@(Merge("text-xs text-green-700 dark:text-green-400 space-y-2 hidden peer-[.valid]:block"))">
+    @ChildContent
+</p>

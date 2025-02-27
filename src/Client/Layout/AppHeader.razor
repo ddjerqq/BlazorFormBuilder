@@ -1,0 +1,20 @@
+﻿@using Client.Components.Shared
+<header class="border-grid fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <div class="container flex h-14 items-center justify-between">
+        <div class="mr-4 flex">
+            <a class="mr-4 sm:flex items-center gap-2 lg:mr-6" href="/">
+                <Blazicon Svg="@Icons.Clipboard" class="!size-8"/>
+                <span class="hidden font-bold lg:inline-block">Home</span>
+            </a>
+
+            <nav class="flex items-center text-sm gap-2 sm:gap-4 md:gap-6">
+                <HeaderNavLink Href="/create" Title="Create form"/>
+                <HeaderNavLink Href="/my_forms" Title="My forms"/>
+            </nav>
+        </div>
+
+        <div class="flex align-middle space-x-2">
+            <ThemeToggle/>
+        </div>
+    </div>
+</header>

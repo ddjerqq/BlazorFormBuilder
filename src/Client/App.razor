@@ -1,0 +1,44 @@
+﻿@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@inject IJSRuntime Js
+
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+<BlazoredToasts
+    Position="@ToastPosition.TopCenter"
+    Timeout="5"
+    MaxToastCount="3"
+    ShowCloseButton="false"
+    ShowProgressBar="false"
+    PauseProgressOnHover="true"
+    RemoveToastsOnNavigation="false"/>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // this sets the theme that the user previously saved.
+            await using var themeModule = await Js.InvokeAsync<IJSObjectReference>(
+                "import",
+                CancellationToken,
+                "./Components/Shared/ThemeToggle.razor.js");
+            var theme = await themeModule.InvokeAsync<string>("getTheme", CancellationToken);
+            await themeModule.InvokeVoidAsync("setTheme", CancellationToken, theme);
+
+            // Flowbite is only needed for easy dropdowns.
+            await Js.InvokeVoidAsync("window.initFlowbite", CancellationToken);
+        }
+    }
+}

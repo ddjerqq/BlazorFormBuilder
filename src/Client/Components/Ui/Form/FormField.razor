@@ -1,0 +1,14 @@
+﻿@inherits UiComponentBase
+
+<div @attributes="@AdditionalAttributes" class="@(Merge(BaseClass, Class))" >
+    @ChildContent
+</div>
+
+@code {
+    public const string BaseClass =
+        "grid gap-2 " +
+        "has-[.valid]:text-green-700 has-[.valid]:dark:text-green-400 has-[.invalid]:text-red-700 has-[.invalid]:text-red-400 " +
+        "[&_label]:has-[.valid]:text-green-700 [&_label]:has-[.valid]:dark:text-green-400 [&_label]:has-[.invalid]:text-red-700 [&_label]:has-[.invalid]:dark:text-red-400 " +
+        "[&_label]:has-[:disabled]:cursor-not-allowed [&_label]:has-[:disabled]:opacity-70 " +
+        "[&_label]:has-[:required]:after:text-red-600 [&_label]:has-[:required]:after:content-['*']";
+}

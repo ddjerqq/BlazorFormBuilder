@@ -1,0 +1,38 @@
+﻿@using System.Linq.Expressions
+@inherits UiComponentBase
+@implements IDisposable
+@typeparam TValue
+
+@if (EditContext.GetValidationMessages(_fieldIdentifier).ToList() is { Count: > 0 } validationMessages)
+{
+    <div @attributes="@AdditionalAttributes" class="@(Merge("text-sm text-red-700 dark:text-red-400 space-y-2"))">
+        @foreach (var message in validationMessages)
+        {
+            <p>@message</p>
+        }
+    </div>
+}
+
+@code {
+    private FieldIdentifier _fieldIdentifier;
+    private readonly EventHandler<ValidationStateChangedEventArgs>? _validationStateChangedHandler;
+
+    [CascadingParameter]
+    private EditContext EditContext { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public Expression<Func<TValue>> For { get; set; } = null!;
+
+    public FormInvalidFeedback() => _validationStateChangedHandler = (_, _) => StateHasChanged();
+
+    protected override void OnParametersSet()
+    {
+        if (EditContext is null)
+            throw new InvalidOperationException("You must place the FormInvalidFeedback component inside an AppForm");
+
+        _fieldIdentifier = FieldIdentifier.Create(For);
+        EditContext.OnValidationStateChanged += _validationStateChangedHandler;
+    }
+
+    void IDisposable.Dispose() => EditContext.OnValidationStateChanged -= _validationStateChangedHandler;
+}
