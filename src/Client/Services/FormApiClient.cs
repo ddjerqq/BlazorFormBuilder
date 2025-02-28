@@ -24,7 +24,7 @@ public sealed class FormApiClient(HttpClient http)
 
     public async Task<IEnumerable<UserForm>> GetAllForms(int page, int perPage = 10, CancellationToken ct = default)
     {
-        var response = await http.GetAsync($"/api/forms/page={page}&perPage={perPage}", ct);
+        var response = await http.GetAsync($"/api/forms/?page={page}&perPage={perPage}", ct);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<UserForm>>(JsonOptions, ct) ?? [];
     }

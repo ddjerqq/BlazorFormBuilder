@@ -1,6 +1,7 @@
 ﻿using Application.Services;
 using Domain.Aggregates;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Forms;
 
@@ -12,6 +13,9 @@ public sealed class FetchFormByIdQueryHandler(IAppDbContext dbContext) : IReques
     {
         // caching will be possible here, and i will implement it if i have time,
         // just so i can show off, how much of a 10x developer i really am ;)
-        return await dbContext.Forms.FindAsync([request.Id], ct);
+
+        return await dbContext.Forms.AsNoTracking()
+            .Include(x => x.Fields)
+            .FirstOrDefaultAsync(x => x.Id == request.Id, ct);
     }
 }

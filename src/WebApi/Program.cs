@@ -53,6 +53,9 @@ builder.Services.Configure<JsonOptions>(options =>
 
 var app = builder.Build();
 
+// auto migrate pending migrations
+await app.ApplyPendingMigrations();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

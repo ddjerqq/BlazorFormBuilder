@@ -33,7 +33,6 @@ public partial class Edit
         if (UserForm is not null)
         {
             UserForm.SortFields();
-            ShowSuccess("Form loaded successfully");
         }
         else
         {

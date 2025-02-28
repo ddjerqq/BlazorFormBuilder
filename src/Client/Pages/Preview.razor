@@ -1,19 +1,95 @@
 ﻿@page "/preview/{Id:guid}"
+@using System.Text.Json
 @using Client.Services
 @using Domain.Aggregates
+@using Client.Pages.Edit
+@using Client.Components.Ui.Form
+@using Domain.Entities
 @attribute [StreamRendering]
 @inject FormApiClient Api
 
-<h3>@UserForm?.Id</h3>
+<h1 class="mb-4 font-bold text-2xl">Form preview</h1>
+
+<div class="flex justify-start gap-4 mb-4">
+    <Button Variant="outline" Size="icon" @onclick="@(() => Width = "w-full")">
+        <Blazicon Svg="@Icons.Monitor"/>
+    </Button>
+
+    <Button Variant="outline" Size="icon" @onclick="@(() => Width = "w-[640px]")">
+        <Blazicon Svg="@Icons.Tablet"/>
+    </Button>
+
+    <Button Variant="outline" Size="icon" @onclick="@(() => Width = "w-[360px]")">
+        <Blazicon Svg="@Icons.Smartphone"/>
+    </Button>
+</div>
+
+@if (Form is not null)
+{
+    <div class="w-full flex justify-center">
+        <Card class="@Width">
+            <Header>
+                <CardTitle>@Form.Name</CardTitle>
+            </Header>
+            <Content>
+                <AppForm @bind-Model="Form" OnValidSubmit="OnValidSubmit" class="grid gap-4">
+                    @foreach (var field in Form.Fields)
+                    {
+                        <RenderComponentChoice Component="field"/>
+                    }
+                </AppForm>
+            </Content>
+            <Footer class="text-xs text-muted-foreground">
+                Form ID: @Form.Id
+            </Footer>
+        </Card>
+    </div>
+}
+else
+{
+    @:Loading...
+}
 
 @code {
     [Parameter]
     public Guid Id { get; set; }
 
-    private UserForm? UserForm { get; set; }
+    private UserForm? Form { get; set; }
+
+    private string Width { get; set; } = "w-full";
 
     protected override async Task OnInitializedAsync()
     {
-        UserForm = await Api.GetById(Id);
+        Form = await Api.GetById(Id);
+        if (Form is not null)
+        {
+            Form.SortFields();
+        }
+        else
+        {
+            ShowError("Form not found");
+        }
+    }
+
+    private void OnValidSubmit()
+    {
+        IEnumerable<dynamic> values = Form.Fields
+            .Select(field => new
+            {
+                name = field.Label,
+                value = field switch
+                {
+                    CheckboxInput checkboxInput => (object)checkboxInput.Checked,
+                    DateInput dateInput => (object)dateInput.SelectedDate,
+                    NumberInput numberInput => (object)numberInput.SelectedNumericValue,
+                    SelectInput selectInput => (object)selectInput.SelectedOption,
+                    TextInput textInput => (object)textInput.TextValue,
+                    _ => null,
+                },
+            });
+
+        var formattedJson = JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });
+        ShowSuccess("Successfully submitted form!");
+        ShowInfo(formattedJson);
     }
 }

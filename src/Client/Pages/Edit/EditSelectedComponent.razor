@@ -120,6 +120,16 @@
     @if (Component is ButtonComponentChoice button)
     {
         <FormField>
+            <FormLabel for="button-type">Button type</FormLabel>
+            <InputSelect id="button-type" @bind-Value="@button.ButtonType" class="@FormInputText.BaseClass">
+                @foreach (var value in (string[]) ["button", "submit"])
+                {
+                    <option value="@value">@value</option>
+                }
+            </InputSelect>
+        </FormField>
+
+        <FormField>
             <FormLabel for="button-text">Button text</FormLabel>
             <FormInputText id="button-text" @bind-Value="@button.ButtonText"/>
         </FormField>
