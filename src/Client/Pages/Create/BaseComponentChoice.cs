@@ -6,6 +6,7 @@ public abstract class BaseComponentChoice
 {
     public string Id { get; set; } = RandomNumberGenerator.GetHexString(5);
     public required string Label { get; set; }
+    public string? Description { get; set; }
     public bool Required { get; set; } = false;
 
     public static BaseComponentChoice CreateDefault(Type componentType)
@@ -62,8 +63,8 @@ public sealed class TextInput : BaseComponentChoice
             _inputType = value;
         }
     }
-
     public required string Placeholder { get; set; }
+    public string DefaultValue { get; set; } = string.Empty;
 }
 
 public sealed class NumberInput : BaseComponentChoice
@@ -72,6 +73,7 @@ public sealed class NumberInput : BaseComponentChoice
     public float Max { get; set; } = 1;
     public float Step { get; set; } = 0.1f;
     public required string InputType { get; set; }
+    public float DefaultValue { get; set; } = 0;
 }
 
 public sealed class SelectInput : BaseComponentChoice
@@ -99,6 +101,8 @@ public sealed class DateInput : BaseComponentChoice
             _inputType = value;
         }
     }
+
+    public DateTime DefaultValue { get; set; } = DateTime.UtcNow;
 }
 
 /// <summary>
