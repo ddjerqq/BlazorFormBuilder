@@ -1,6 +1,25 @@
 ﻿@page "/my_forms"
+@using Client.Services
+@using Domain.Aggregates
+@inject FormApiClient Api
+@attribute [StreamRendering]
+
 <h3>MyForms</h3>
 
+<ul>
+    @foreach (var form in Forms)
+    {
+        <li>
+            @form.Id
+        </li>
+    }
+</ul>
+
 @code {
-    
+    private IEnumerable<UserForm> Forms { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Forms = await Api.GetAllForms(0, 10, CancellationToken);
+    }
 }

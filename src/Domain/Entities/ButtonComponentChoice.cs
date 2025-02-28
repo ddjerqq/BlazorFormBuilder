@@ -1,4 +1,4 @@
-﻿namespace Client.Common;
+﻿namespace Domain.Entities;
 
 /// <summary>
 /// The type="submit" button for the form.

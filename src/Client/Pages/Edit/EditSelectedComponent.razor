@@ -1,5 +1,5 @@
-﻿@using Client.Common
-@using Client.Components.Ui.Form
+﻿@using Client.Components.Ui.Form
+@using Domain.Entities
 
 <AppForm Model="Component" ModelChanged="ComponentChanged">
     <FormField>
@@ -38,7 +38,7 @@
 
         <FormField>
             <FormLabel for="default-value">Default value</FormLabel>
-            <FormInputText id="default-value" @bind-Value="@textInput.Value"/>
+            <FormInputText id="default-value" @bind-Value="@textInput.TextValue"/>
             <FormDescription>Edit the default value, or leave empty</FormDescription>
         </FormField>
     }
@@ -112,7 +112,7 @@
         <FormField>
             <FormLabel for="default-value">Default value</FormLabel>
             <InputDate id="default-value" class="@FormInputText.BaseClass"
-                       @bind-Value="@dateInput.Value" Type="dateInput.InputDateType"/>
+                       @bind-Value="@dateInput.SelectedDate" Type="@dateInput.GetInputDateType()"/>
             <FormDescription>Edit the default value</FormDescription>
         </FormField>
     }

@@ -1,8 +1,8 @@
-﻿namespace Client.Common;
+﻿namespace Domain.Entities;
 
 public sealed class TextInput : BaseComponentChoice
 {
-    public string Value { get; set; } = null!;
+    public string TextValue { get; set; } = null!;
     public string InputType { get; set; } = null!;
     public required string Placeholder { get; set; }
 }

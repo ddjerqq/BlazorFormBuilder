@@ -1,3 +1,33 @@
 ﻿@page "/"
+@using Client.Services
+@using Domain.Aggregates
+@inject FormApiClient Api
 
 <PageTitle>Home</PageTitle>
+
+<Card>
+    <Header>
+        <CardTitle>Welcome to the form builder app!</CardTitle>
+        <Description>To get started, click the button below to create a new form</Description>
+    </Header>
+    <Content>
+        <Button @onclick="CreateForm">
+            <Blazicon Svg="@Icons.Plus"/>
+            Create new form
+        </Button>
+    </Content>
+</Card>
+
+@code {
+    private async Task CreateForm()
+    {
+        var form = new UserForm
+        {
+            Id = Guid.NewGuid(),
+            Name = "New form",
+        };
+
+        await Api.Create(form, CancellationToken);
+        NavigationManager.NavigateTo($"/edit/{form.Id}");
+    }
+}

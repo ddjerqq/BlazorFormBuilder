@@ -1,11 +1,11 @@
 ﻿@using System.Diagnostics.CodeAnalysis
-@using Blazored.FluentValidation
 @typeparam TEntity where TEntity : class
 @attribute [CascadingTypeParameter(nameof(TEntity))]
 
 <EditForm EditContext="EditContext" OnSubmit="OnSubmit" FormName="@FormName" Enhance novalidate class="grid gap-4 sm:gap-6" @attributes="@AdditionalAttributes">
-    <DataAnnotationsValidator />
-    <FluentValidationValidator @ref="FluentValidationValidator" />
+    <DataAnnotationsValidator/>
+    @* we could support fluent validation really easily, if we uncommented the bottom line and added some validation logic in OnSubmit *@
+    @* <FluentValidationValidator @ref="FluentValidationValidator" /> *@
 
     @ChildContent
 </EditForm>
@@ -31,8 +31,6 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; } = [];
-
-    public FluentValidationValidator? FluentValidationValidator { get; set; }
 
     [DisallowNull]
     public CustomValidationCssClassProvider? ValidationCssClassProvider { get; private set; }
@@ -62,20 +60,7 @@
     {
         ValidationCssClassProvider!.ValidateAllFields = true;
 
-        bool isValid;
-
-        try
-        {
-            isValid = await FluentValidationValidator!.ValidateAsync();
-        }
-        catch (InvalidOperationException)
-        {
-            // This exception is thrown when the form is submitted without any validation rules on the model, which is a warning
-            Console.Error.WriteLine("Warning: No validation rules found for model {0}", Model);
-            isValid = true;
-        }
-
-        if (isValid)
+        if (EditContext!.Validate())
             await OnValidSubmit.InvokeAsync(EditContext);
         else
         {

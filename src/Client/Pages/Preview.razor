@@ -1,0 +1,19 @@
+﻿@page "/preview/{Id:guid}"
+@using Client.Services
+@using Domain.Aggregates
+@attribute [StreamRendering]
+@inject FormApiClient Api
+
+<h3>@UserForm?.Id</h3>
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private UserForm? UserForm { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        UserForm = await Api.GetById(Id);
+    }
+}

@@ -1,5 +1,5 @@
-﻿@using Client.Common
-@using Client.Components.Ui.Form
+﻿@using Client.Components.Ui.Form
+@using Domain.Entities
 
 <FormField>
     <FormLabel for="@Component.Id">@Component.Label</FormLabel>
@@ -7,7 +7,7 @@
     @if (Component is TextInput textInput)
     {
         <FormInputText
-            id="@Component.Id" @bind-Value="@textInput.Value"
+            id="@Component.Id" @bind-Value="@textInput.TextValue"
             type="@textInput.InputType" placeholder="@textInput.Placeholder" required="@textInput.Required"/>
         @* <FormInvalidFeedback For="@(() => textInput.Value)"/> *@
     }
@@ -17,26 +17,30 @@
         <InputNumber
             TValue="float"
             class="@FormInputText.BaseClass"
-            id="@Component.Id" @bind-Value="@numberInput.Value"
+            id="@Component.Id" @bind-Value="@numberInput.SelectedNumericValue"
             min="@numberInput.Min" max="@numberInput.Max" step="@numberInput.Step" required="@numberInput.Required"/>
     }
+
     @if (Component is SelectInput selectInput)
     {
-        <InputSelect id="@Component.Id" @bind-Value="@selectInput.Value" class="@FormInputText.BaseClass">
+        <InputSelect id="@Component.Id" @bind-Value="@selectInput.SelectedOption" class="@FormInputText.BaseClass">
             @foreach (var value in selectInput.Choices)
             {
                 <option value="@value">@value</option>
             }
         </InputSelect>
     }
+
     @if (Component is CheckboxInput checkboxInput)
     {
-        <Switch id="@Component.Id" @bind-Value="@checkboxInput.Value"/>
+        <Switch id="@Component.Id" @bind-Value="@checkboxInput.Checked"/>
     }
+
     @if (Component is DateInput dateInput)
     {
-        <InputDate id="@Component.Id" @bind-Value="@dateInput.Value" class="@FormInputText.BaseClass"/>
+        <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass"/>
     }
+
     @if (Component is ButtonComponentChoice button)
     {
         <Button id="@Component.Id" Variant="default">
