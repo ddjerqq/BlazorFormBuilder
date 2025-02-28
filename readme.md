@@ -25,7 +25,9 @@ Ensure you have the following installed:
 - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [Node.js](https://nodejs.org/en/download)
 - [Make](https://www.gnu.org/software/make/manual/make.html)
-- [Tailwindcss CLI v3.4](https://github.com/tailwindlabs/tailwindcss/releases/tag/v3.4.17) # Important, make sure the cli iss not version 4!!!
+- [Tailwindcss CLI v3.4](https://github.com/tailwindlabs/tailwindcss/releases/tag/v3.4.17) 
+> [!CAUTION]
+> Make sure the TailwindCSS CLI version is less than 4!!!
 
 ### 📦 Clone the repo
 ```sh
