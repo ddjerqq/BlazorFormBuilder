@@ -75,6 +75,11 @@ public partial class Create
 
     private void RemoveItem(int index)
     {
+        // if we remove the component we're currently editing,
+        // then stop editing
+        if (CurrentlyEditing == _builderItems[index])
+            CurrentlyEditing = null;
+
         _builderItems.RemoveAt(index);
         StateHasChanged();
     }

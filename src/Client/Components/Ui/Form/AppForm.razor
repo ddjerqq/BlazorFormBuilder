@@ -71,7 +71,7 @@
         catch (InvalidOperationException)
         {
             // This exception is thrown when the form is submitted without any validation rules on the model, which is a warning
-            Console.Error.WriteLine("No validation rules found for model {0}", Model);
+            Console.Error.WriteLine("Warning: No validation rules found for model {0}", Model);
             isValid = true;
         }
 

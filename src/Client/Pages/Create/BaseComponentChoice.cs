@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace Client.Pages.Create;
 
@@ -21,12 +22,11 @@ public abstract class BaseComponentChoice
             },
             "NumberInput" => new NumberInput
             {
-                InputType = "number",
                 Label = "NumberInput",
             },
             "SelectInput" => new SelectInput
             {
-                Choices = ["a", "b", "c"],
+                Choices = [],
                 Label = "SelectInput",
             },
             "CheckboxInput" => new CheckboxInput
@@ -72,7 +72,6 @@ public sealed class NumberInput : BaseComponentChoice
     public float Min { get; set; } = 0;
     public float Max { get; set; } = 1;
     public float Step { get; set; } = 0.1f;
-    public required string InputType { get; set; }
     public float DefaultValue { get; set; } = 0;
 }
 
@@ -95,12 +94,22 @@ public sealed class DateInput : BaseComponentChoice
         get => _inputType;
         set
         {
-            if (value is not ("date" or "month" or "week" or "time" or "datetime-local"))
-                throw new ArgumentException("InputType must be one of the following: date, month, week, time, datetime-local");
+            // Blazor's InputDate component doesn't support weeks. so we exclude it
+            if (value is not ("date" or "month" or "time" or "datetime-local"))
+                throw new ArgumentException("InputType must be one of the following: date, month, time, datetime-local");
 
             _inputType = value;
         }
     }
+
+    public InputDateType InputDateType => InputType switch
+    {
+        "date" => InputDateType.Date,
+        "month" => InputDateType.Month,
+        "time" => InputDateType.Time,
+        "datetime-local" => InputDateType.DateTimeLocal,
+        _ => throw new ArgumentOutOfRangeException(nameof(InputType), "Invalid InputType"),
+    };
 
     public DateTime DefaultValue { get; set; } = DateTime.UtcNow;
 }

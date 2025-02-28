@@ -2,68 +2,132 @@
 
 <AppForm Model="Component" ModelChanged="ComponentChanged">
     <FormField>
-        <FormLabel>Label</FormLabel>
-        <FormInputText @bind-Value="@Component.Label" required/>
-        <FormDescription>Edit the label text</FormDescription>
+        <FormLabel for="label">Label</FormLabel>
+        @* autofocus ensures as soon as the user starts editing, they get focus to the label field *@
+        <FormInputText autofocus id="label" @bind-Value="@Component.Label" required/>
     </FormField>
 
     <FormField>
-        <FormLabel>Required?</FormLabel>
-        <Switch @bind-Value="@Component.Required"/>
-        <FormDescription>Whether or not this field is required</FormDescription>
+        <FormLabel for="description">Description</FormLabel>
+        <FormInputText id="description" @bind-Value="@Component.Description" required/>
+        <FormDescription>Enter the description or leave empty</FormDescription>
+    </FormField>
+
+    <FormField>
+        <FormLabel for="required">Required?</FormLabel>
+        <Switch id="required" @bind-Value="@Component.Required"/>
     </FormField>
 
     @if (Component is TextInput textInput)
     {
         <FormField>
-            <FormLabel>Input type</FormLabel>
-            <select id="input-type"
-                    @onchange="@(arg => textInput.InputType = arg.Value?.ToString() ?? "text")"
-                    class="@FormInputText.BaseClass">
-                @foreach (var value in (string[])["text", "tel", "url", "password", "search"])
+            <FormLabel for="type">Input type</FormLabel>
+            <InputSelect id="type" @bind-Value="@textInput.InputType" class="@FormInputText.BaseClass">
+                @foreach (var value in (string[]) ["text", "tel", "url", "password", "search"])
                 {
                     <option value="@value">@value</option>
                 }
-            </select>
+            </InputSelect>
         </FormField>
 
         <FormField>
-            <FormLabel>Placeholder text</FormLabel>
-            <FormInputText @bind-Value="@textInput.Placeholder"/>
-            <FormDescription>Edit the placeholder  text</FormDescription>
+            <FormLabel for="placeholder">Placeholder text</FormLabel>
+            <FormInputText id="placeholder" @bind-Value="@textInput.Placeholder"/>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="default-value">Default value</FormLabel>
+            <FormInputText id="default-value" @bind-Value="@textInput.DefaultValue"/>
+            <FormDescription>Edit the default value, or leave empty</FormDescription>
         </FormField>
     }
 
     @if (Component is NumberInput numberInput)
     {
-        <span>InputType</span>
-        <span>Min</span>
-        <span>Max</span>
-        <span>Step</span>
+        <FormField>
+            <FormLabel for="min">Minimum</FormLabel>
+            <InputNumber id="min" @bind-Value="@numberInput.Min" class="@FormInputText.BaseClass"/>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="max">Maximum</FormLabel>
+            <InputNumber id="max" @bind-Value="@numberInput.Max" class="@FormInputText.BaseClass"/>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="step">Step</FormLabel>
+            <InputNumber id="step" @bind-Value="@numberInput.Step" class="@FormInputText.BaseClass"/>
+        </FormField>
     }
 
     @if (Component is SelectInput selectInput)
     {
-        <span>Choices edit here</span>
+        var addCallback = () =>
+        {
+            selectInput.Choices.Add(SelectInputTempValue);
+            SelectInputTempValue = null!;
+        };
+
+        <FormField>
+            <FormLabel for="select-input-temp-value">Choices</FormLabel>
+
+            <ul class="grid gap-1">
+                @foreach (var choice in selectInput.Choices)
+                {
+                    <Button type="button" Variant="outline" class="justify-start"
+                            @onclick="@(() => selectInput.Choices.Remove(choice))">
+                        <Blazicon Svg="@Icons.Trash"/>
+                        @choice
+                    </Button>
+                }
+            </ul>
+
+            <FormInputText id="select-input-temp-value" placeholder="enter choice" @bind-Value="@SelectInputTempValue"/>
+
+            <Button type="button" Variant="default" @onclick="@addCallback">
+                <Blazicon Svg="@Icons.Plus"/>
+                Add
+            </Button>
+        </FormField>
     }
 
+    @* nothing special going on here *@
     @if (Component is CheckboxInput checkboxInput)
     {
     }
 
     @if (Component is DateInput dateInput)
     {
-        <span>InputType</span>
+        <FormField>
+            <FormLabel for="date-type">Date type</FormLabel>
+            <InputSelect id="date-type" @bind-Value="@dateInput.InputType" class="@FormInputText.BaseClass">
+                @foreach (var value in (string[]) ["date", "month", "time", "datetime-local"])
+                {
+                    <option value="@value">@value</option>
+                }
+            </InputSelect>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="default-value">Default value</FormLabel>
+            <InputDate id="default-value" class="@FormInputText.BaseClass"
+                       @bind-Value="@dateInput.DefaultValue" Type="dateInput.InputDateType"/>
+            <FormDescription>Edit the default value</FormDescription>
+        </FormField>
     }
 
     @if (Component is Button button)
     {
-        <span>ButtonText</span>
+        <FormField>
+            <FormLabel for="button-text">Button text</FormLabel>
+            <FormInputText id="button-text" @bind-Value="@button.ButtonText"/>
+        </FormField>
     }
-
 </AppForm>
 
 @code {
+    private string SelectInputTempValue { get; set; } = null!;
+
     [Parameter, EditorRequired]
     public BaseComponentChoice Component { get; set; } = null!;
 
