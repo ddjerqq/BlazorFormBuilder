@@ -34,7 +34,6 @@ builder.Services.ConfigurePersistence();
 #region web api services
 
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
 builder.Services.AddCors(opt => opt.AddDefaultPolicy(cors =>
 {
@@ -64,6 +63,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors();
-app.MapControllers();
+
+app.UseRouting();
+
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
+
+#pragma warning disable ASP0014, It does not work without endpoints, so make the error shut up
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapFallbackToFile("index.html");
+});
+#pragma warning restore ASP0014
 
 app.Run();

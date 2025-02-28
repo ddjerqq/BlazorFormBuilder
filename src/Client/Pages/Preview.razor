@@ -74,7 +74,7 @@ else
 
     private void OnValidSubmit()
     {
-        Dictionary<string, object> values = Form.Fields
+        var values = Form!.Fields
             .Select(field => new
             {
                 name = field.Label,

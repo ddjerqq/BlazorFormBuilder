@@ -38,9 +38,11 @@
                  class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-background">
                 @foreach (var componentType in PickerComponents)
                 {
+                    var currentlyDragging = _draggingComponentType == componentType;
+                    var borderClass = currentlyDragging ? "border-primary" : "border-border";
                     var component = BaseComponentChoice.CreateDefault(componentType, UserForm.Id);
 
-                    <div class="p-4 bg-secondary text-secondary-foreground rounded-md border-2 border-dashed border-primary text-center align-middle"
+                    <div class="@($"p-4 bg-secondary text-secondary-foreground rounded-md border-2 border-dashed text-center align-middle {borderClass}")"
                          draggable="true"
                          @ondragstart="@(() => OnPickerDragStart(componentType))" @ondragend="OnDragEnd">
 
@@ -54,15 +56,18 @@
 
                 @foreach (var (idx, componentChoice) in UserForm.Fields.Index())
                 {
+                    var currentlyEditing = CurrentlyEditing?.Id == componentChoice.Id;
+                    var borderClass = currentlyEditing ? "border-primary" : "border-border";
+
                     <div
-                        class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
+                        class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
                         ondragoverPreventDefault="true"
                         @ondrop="@(e => OnDropAt(idx))">
                         <Blazicon Svg="@Icons.Plus"/>
                     </div>
 
                     <span
-                        class="relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed border-primary rounded-md text-center align-middle"
+                        class="@($"relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed rounded-md text-center align-middle {borderClass}")"
                         draggable="true"
                         @ondragstart="@(() => OnBuilderDragStart(idx))"
                         @ondragend="OnDragEnd">
@@ -89,7 +94,6 @@
                         </span>
                     </span>
                 }
-
 
                 <div
                     class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
