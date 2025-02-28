@@ -34,15 +34,15 @@
                         </Button>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Button Variant="outline" disabled>
                             <Blazicon Svg="@Icons.CalendarPlus"/>
-                            Created: <time>@form.Created.ToString("F")</time>
+                            Created: <time>@form.Created.ToString("s")</time>
                         </Button>
 
                         <Button Variant="outline" disabled>
                             <Blazicon Svg="@Icons.CalendarCog"/>
-                            Modified: <time>@form.Modified.ToString("F")</time>
+                            Modified: <time>@form.Modified.ToString("s")</time>
                         </Button>
                     </div>
                 </CardContent>
