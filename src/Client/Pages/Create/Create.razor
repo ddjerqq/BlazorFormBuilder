@@ -1,76 +1,90 @@
 ﻿@page "/create"
+@using Client.Common
+@using Client.Components.Ui.Form
 
 <PageTitle>Create new form</PageTitle>
 
-<div class="w-full h-full grid grid-cols-3 gap-2">
-    <span>Components</span>
-    <span>Form</span>
-    <span>Edit selected component</span>
+<AppForm @bind-Model="DummyFormBinder">
+    <div class="w-full h-full grid grid-cols-3 gap-2">
+        <span>Components</span>
+        <span>Form</span>
+        <span>Edit selected component</span>
 
-    <div id="element-picker" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4">
-        @foreach (var compType in PickerComponents)
-        {
-            <span class="p-4 bg-primary text-primary-foreground rounded-md text-center align-middle"
-                  draggable="true"
-                  @ondragstart="@(() => OnPickerDragStart(compType))"
-                  @ondragend="OnDragEnd">
-                @compType.Name
-            </span>
-        }
-    </div>
+        <div id="element-picker"
+             class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-background">
+            @foreach (var componentType in PickerComponents)
+            {
+                var component = BaseComponentChoice.CreateDefault(componentType);
 
-    <!-- Builder container with explicit drop zones -->
-    <div id="builder" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-graph-paper" @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true">
-        @foreach (var (idx, builderItem) in _builderItems.Index())
-        {
-            <div class="drop-zone h-full grow p-4 rounded-md border-2 border-dashed border-secondary bg-background"
-                 @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true"
-                 @ondrop="@(e => OnDropAt(idx))">
-            </div>
+                <div class="p-4 bg-secondary text-secondary-foreground rounded-md text-center align-middle"
+                     draggable="true"
+                     @ondragstart="@(() => OnPickerDragStart(componentType))" @ondragend="OnDragEnd">
 
-            <span class="relative p-4 bg-primary text-primary-foreground rounded-md text-center align-middle"
-                  draggable="true"
-                  @ondragstart="@(() => OnBuilderDragStart(idx))"
-                  @ondragend="OnDragEnd">
+                    <RenderComponentChoice Component="component"/>
+                </div>
+            }
+        </div>
 
-                <span>
-                    @builderItem.Label
-                </span>
+        <div id="builder" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-graph-paper"
+             ondragoverPreventDefault="true">
+
+            @foreach (var (idx, componentChoice) in AddedComponents.Index())
+            {
+                <div
+                    class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
+                    ondragoverPreventDefault="true"
+                    @ondrop="@(e => OnDropAt(idx))">
+                    <Blazicon Svg="@Icons.Plus"/>
+                </div>
 
                 <span
-                    class="order-badge absolute top-0 left-[5px] w-[20px] rounded-b-md bg-secondary text-secondary-foreground p-1 text-xs rounded-bl-md">
+                    class="relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed border-primary rounded-md text-center align-middle"
+                    draggable="true"
+                    @ondragstart="@(() => OnBuilderDragStart(idx))"
+                    @ondragend="OnDragEnd">
+
+                <div class="block mb-5 p-4">
+                    <RenderComponentChoice Component="componentChoice"/>
+                </div>
+
+                <span
+                    class="order-badge absolute top-0 left-[5px] w-[20px] rounded-b-md bg-primary text-primary-foreground p-2 text-xs rounded-bl-md">
                     @(idx + 1)
                 </span>
 
                 <span @onclick="@(() => EditItem(idx))"
-                      class="absolute top-0 right-[15px] cursor-pointer bg-cyan-500 text-white p-1 text-xs"
+                      class="absolute top-0 right-10 cursor-pointer bg-primary text-primary-foreground p-2 text-xs"
                       draggable="false">
-                    ✎
+                    <Blazicon Svg="@Icons.Pencil"/>
                 </span>
 
                 <span @onclick="@(() => RemoveItem(idx))"
-                      class="absolute top-0 right-0 cursor-pointer bg-destructive text-destructive-foreground p-1 text-xs rounded-tr-sm"
+                      class="absolute top-0 right-0 cursor-pointer bg-destructive text-destructive-foreground p-2 text-xs rounded-tr-sm"
                       draggable="false">
-                    X
+                    <Blazicon Svg="@Icons.X"/>
                 </span>
             </span>
-        }
+            }
 
-        <div class="drop-zone h-full grow p-4 rounded-md border-2 border-dashed border-secondary bg-background"
-             @ondragover="@OnDropZoneDragOver" @ondragover:preventDefault="true"
-             @ondrop="@(e => OnDropAt(_builderItems.Count))">
+
+            <div
+                class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
+                ondragoverPreventDefault="true"
+                @ondrop="@(e => OnDropAt(AddedComponents.Count))">
+                <Blazicon Svg="@Icons.Plus"/>
+            </div>
         </div>
-    </div>
 
-    <Card id="edit-panel" class="border-2 border-dashed">
-        @if (CurrentlyEditing is not null)
-        {
-            <Header>
-                <CardTitle>Editing: @CurrentlyEditing.Label @(_builderItems.IndexOf(CurrentlyEditing) + 1)</CardTitle>
-            </Header>
-            <Content>
-                <EditSelectedComponent Component="CurrentlyEditing" ComponentChanged="StateHasChanged"/>
-            </Content>
-        }
-    </Card>
-</div>
+        <Card id="edit-panel" class="border-2 border-dashed">
+            @if (CurrentlyEditing is not null)
+            {
+                <Header>
+                    <CardTitle>Editing: @CurrentlyEditing.Label @(AddedComponents.IndexOf(CurrentlyEditing) + 1)</CardTitle>
+                </Header>
+                <Content>
+                    <EditSelectedComponent Component="CurrentlyEditing" ComponentChanged="StateHasChanged"/>
+                </Content>
+            }
+        </Card>
+    </div>
+</AppForm>

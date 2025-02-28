@@ -1,0 +1,56 @@
+﻿@using Client.Common
+@using Client.Components.Ui.Form
+
+<FormField>
+    <FormLabel for="@Component.Id">@Component.Label</FormLabel>
+
+    @if (Component is TextInput textInput)
+    {
+        <FormInputText
+            id="@Component.Id" @bind-Value="@textInput.Value"
+            type="@textInput.InputType" placeholder="@textInput.Placeholder" required="@textInput.Required"/>
+        @* <FormInvalidFeedback For="@(() => textInput.Value)"/> *@
+    }
+
+    @if (Component is NumberInput numberInput)
+    {
+        <InputNumber
+            TValue="float"
+            class="@FormInputText.BaseClass"
+            id="@Component.Id" @bind-Value="@numberInput.Value"
+            min="@numberInput.Min" max="@numberInput.Max" step="@numberInput.Step" required="@numberInput.Required"/>
+    }
+    @if (Component is SelectInput selectInput)
+    {
+        <InputSelect id="@Component.Id" @bind-Value="@selectInput.Value" class="@FormInputText.BaseClass">
+            @foreach (var value in selectInput.Choices)
+            {
+                <option value="@value">@value</option>
+            }
+        </InputSelect>
+    }
+    @if (Component is CheckboxInput checkboxInput)
+    {
+        <Switch id="@Component.Id" @bind-Value="@checkboxInput.Value"/>
+    }
+    @if (Component is DateInput dateInput)
+    {
+        <InputDate id="@Component.Id" @bind-Value="@dateInput.Value" class="@FormInputText.BaseClass"/>
+    }
+    @if (Component is ButtonComponentChoice button)
+    {
+        <Button id="@Component.Id" Variant="default">
+            @button.ButtonText
+        </Button>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Component.Description))
+    {
+        <FormDescription>@Component.Description</FormDescription>
+    }
+</FormField>
+
+@code {
+    [Parameter, EditorRequired]
+    public BaseComponentChoice Component { get; set; } = null!;
+}

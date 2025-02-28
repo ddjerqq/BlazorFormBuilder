@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Components.Web;
+﻿using Client.Common;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace Client.Pages.Create;
 
 public partial class Create
 {
-    private BaseComponentChoice? CurrentlyEditing { get; set; }
+    [Inject]
+    public IJSRuntime Js { get; set; } = null!;
+
+    public object DummyFormBinder { get; set; } = new();
 
     private static readonly List<Type> PickerComponents =
     [
@@ -13,14 +19,24 @@ public partial class Create
         typeof(SelectInput),
         typeof(CheckboxInput),
         typeof(DateInput),
-        typeof(Button),
+        typeof(ButtonComponentChoice),
     ];
 
-    private readonly List<BaseComponentChoice> _builderItems = [];
+    private BaseComponentChoice? CurrentlyEditing { get; set; }
+    private List<BaseComponentChoice> AddedComponents { get; set; } = [];
 
     private bool _isDraggingFromPicker;
     private int? _draggingIndex;
     private Type? _draggingComponentType;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await using var module = await Js.InvokeAsync<IJSObjectReference>("import", CancellationToken, "./Pages/Create/Create.razor.js");
+            await module.InvokeAsync<string>("AddEventHandlersToDraggableContainers", CancellationToken);
+        }
+    }
 
     private void OnPickerDragStart(Type compType)
     {
@@ -41,32 +57,25 @@ public partial class Create
         _isDraggingFromPicker = false;
     }
 
-    /// <summary>
-    /// even though this method does absolutely nothing, it is required for blazor to fire the appropriate event
-    /// </summary>
-    private void OnDropZoneDragOver(DragEventArgs e)
-    {
-    }
-
     private void OnDropAt(int index)
     {
         if (_isDraggingFromPicker && _draggingComponentType != null)
         {
             var component = BaseComponentChoice.CreateDefault(_draggingComponentType);
-            _builderItems.Insert(index, component);
+            AddedComponents.Insert(index, component);
             CurrentlyEditing = component;
         }
         else if (!_isDraggingFromPicker && _draggingIndex.HasValue)
         {
-            var item = _builderItems[_draggingIndex.Value];
-            _builderItems.RemoveAt(_draggingIndex.Value);
+            var item = AddedComponents[_draggingIndex.Value];
+            AddedComponents.RemoveAt(_draggingIndex.Value);
 
             if (_draggingIndex.Value < index)
             {
                 index--;
             }
 
-            _builderItems.Insert(index, item);
+            AddedComponents.Insert(index, item);
         }
 
         OnDragEnd();
@@ -77,16 +86,16 @@ public partial class Create
     {
         // if we remove the component we're currently editing,
         // then stop editing
-        if (CurrentlyEditing == _builderItems[index])
+        if (CurrentlyEditing == AddedComponents[index])
             CurrentlyEditing = null;
 
-        _builderItems.RemoveAt(index);
+        AddedComponents.RemoveAt(index);
         StateHasChanged();
     }
 
     private void EditItem(int index)
     {
-        CurrentlyEditing = _builderItems[index];
+        CurrentlyEditing = AddedComponents[index];
         StateHasChanged();
     }
 }
