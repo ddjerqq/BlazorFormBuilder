@@ -4,22 +4,68 @@
 @inject FormApiClient Api
 @attribute [StreamRendering]
 
-<h3>MyForms</h3>
+<Card>
+    <CardHeader>
+        <CardTitle>My forms</CardTitle>
+        <CardDescription>Create, Edit, or remove your forms here</CardDescription>
+    </CardHeader>
+    <CardContent class="grid gap-4">
+        @foreach (var form in Forms)
+        {
+            <Card>
+                <CardHeader>
+                    <CardTitle>@form.Name</CardTitle>
+                </CardHeader>
+                <CardContent class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <Button Href="@($"/preview/{form.Id}")" Variant="default">
+                            <Blazicon Svg="@Icons.Play"/>
+                            Preview
+                        </Button>
 
-<ul>
-    @foreach (var form in Forms)
-    {
-        <li>
-            @form.Id
-        </li>
-    }
-</ul>
+                        <Button Href="@($"/edit/{form.Id}")" Variant="secondary">
+                            <Blazicon Svg="@Icons.Pencil"/>
+                            Edit
+                        </Button>
+
+                        <Button @onclick="@(async () => await DeleteForm(form))" Variant="destructive">
+                            <Blazicon Svg="@Icons.Trash"/>
+                            Delete
+                        </Button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <Button Variant="outline" disabled>
+                            <Blazicon Svg="@Icons.CalendarPlus"/>
+                            Created: <time>@form.Created.ToString("F")</time>
+                        </Button>
+
+                        <Button Variant="outline" disabled>
+                            <Blazicon Svg="@Icons.CalendarCog"/>
+                            Modified: <time>@form.Modified.ToString("F")</time>
+                        </Button>
+                    </div>
+                </CardContent>
+                <CardFooter class="text-xs text-muted-foreground">
+                    @form.Id
+                </CardFooter>
+            </Card>
+        }
+    </CardContent>
+</Card>
 
 @code {
-    private IEnumerable<UserForm> Forms { get; set; } = [];
+    private List<UserForm> Forms { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        Forms = await Api.GetAllForms(0, 10, CancellationToken);
+        Forms = (await Api.GetAllForms(0, 10, CancellationToken)).ToList();
+    }
+
+    private async Task DeleteForm(UserForm form)
+    {
+        await Api.DeleteForm(form.Id);
+        Forms.Remove(form);
+        ShowSuccess($"Form: '{form.Name}' deleted");
     }
 }

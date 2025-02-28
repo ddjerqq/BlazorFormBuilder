@@ -4,6 +4,7 @@
 @using Domain.Aggregates
 @using Client.Pages.Edit
 @using Client.Components.Ui.Form
+@using Domain.Common
 @using Domain.Entities
 @attribute [StreamRendering]
 @inject FormApiClient Api
@@ -28,20 +29,20 @@
 {
     <div class="w-full flex justify-center">
         <Card class="@Width">
-            <Header>
+            <CardHeader>
                 <CardTitle>@Form.Name</CardTitle>
-            </Header>
-            <Content>
+            </CardHeader>
+            <CardContent>
                 <AppForm @bind-Model="Form" OnValidSubmit="OnValidSubmit" class="grid gap-4">
                     @foreach (var field in Form.Fields)
                     {
                         <RenderComponentChoice Component="field"/>
                     }
                 </AppForm>
-            </Content>
-            <Footer class="text-xs text-muted-foreground">
+            </CardContent>
+            <CardFooter class="text-xs text-muted-foreground">
                 Form ID: @Form.Id
-            </Footer>
+            </CardFooter>
         </Card>
     </div>
 }
@@ -73,7 +74,7 @@ else
 
     private void OnValidSubmit()
     {
-        IEnumerable<dynamic> values = Form.Fields
+        Dictionary<string, object> values = Form.Fields
             .Select(field => new
             {
                 name = field.Label,
@@ -86,10 +87,14 @@ else
                     TextInput textInput => (object)textInput.TextValue,
                     _ => null,
                 },
-            });
+            })
+            // filter out the button and other gibberish
+            .Where(kv => kv.value is not null)
+            .ToDictionary(kv => kv.name.ToSnakeCase(), kv => kv.value);
 
-        var formattedJson = JsonSerializer.Serialize(values, new JsonSerializerOptions { WriteIndented = true });
-        ShowSuccess("Successfully submitted form!");
+        var formattedJson = JsonSerializer.Serialize(values, new JsonSerializerOptions { IndentSize = 4, WriteIndented = true });
+        ShowSuccess("Successfully submitted form with data:");
         ShowInfo(formattedJson);
+        Console.WriteLine("user submitted {0}", formattedJson);
     }
 }

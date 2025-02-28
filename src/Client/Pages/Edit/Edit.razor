@@ -102,12 +102,12 @@
             <Card id="edit-panel" class="border-2 border-dashed">
                 @if (CurrentlyEditing is not null)
                 {
-                    <Header>
+                    <CardHeader>
                         <CardTitle>Editing: @CurrentlyEditing.Label @(UserForm.Fields.IndexOf(CurrentlyEditing) + 1)</CardTitle>
-                    </Header>
-                    <Content>
+                    </CardHeader>
+                    <CardContent>
                         <EditSelectedComponent Component="CurrentlyEditing" ComponentChanged="StateHasChanged"/>
-                    </Content>
+                    </CardContent>
                 }
             </Card>
         </div>

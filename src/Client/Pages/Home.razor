@@ -6,16 +6,23 @@
 <PageTitle>Home</PageTitle>
 
 <Card>
-    <Header>
+    <CardHeader>
         <CardTitle>Welcome to the form builder app!</CardTitle>
-        <Description>To get started, click the button below to create a new form</Description>
-    </Header>
-    <Content>
-        <Button @onclick="CreateForm">
-            <Blazicon Svg="@Icons.Plus"/>
-            Create new form
-        </Button>
-    </Content>
+        <CardDescription>To get started, click the button below to create a new form, or check out some examples!</CardDescription>
+    </CardHeader>
+    <CardContent>
+        <div class="grid grid-cols-2 gap-2">
+            <Button @onclick="CreateForm">
+                <Blazicon Svg="@Icons.Plus"/>
+                Create new form
+            </Button>
+
+            <Button Href="/my_forms" Variant="outline">
+                <Blazicon Svg="@Icons.ClipboardList"/>
+                My forms
+            </Button>
+        </div>
+    </CardContent>
 </Card>
 
 @code {
