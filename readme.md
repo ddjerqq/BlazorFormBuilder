@@ -45,7 +45,7 @@ echo "/path/to/solution/app.db" > .env
 ```sh 
 dotnet watch run --project src/WebApi/WebApi.csproj
 ```
-> [!INFO] 
+> [!NOTE] 
 > Building tailwind classes, seeding the database will all get taken care of automatically, 
 > you don't have to worry about configurations, as long as you have all the required dependencies 
 
