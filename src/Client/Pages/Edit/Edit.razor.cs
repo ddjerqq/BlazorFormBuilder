@@ -21,14 +21,6 @@ public partial class Edit
 
     private UserForm? UserForm { get; set; }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // this may be overkill, but if we only hook onto the events on first render,
-        // then, the OnInitialized logic messes up the js timing.
-        await using var module = await Js.InvokeAsync<IJSObjectReference>("import", CancellationToken, "./Pages/Edit/Edit.razor.js");
-        await module.InvokeAsync<string>("AddEventHandlersToDraggableContainers", CancellationToken);
-    }
-
     protected override async Task OnInitializedAsync()
     {
         UserForm = await Api.GetById(Id, CancellationToken);

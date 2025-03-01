@@ -66,7 +66,7 @@
                 </CardContent>
             </Card>
 
-            <Card id="builder" ondragoverPreventDefault="true">
+            <Card id="builder" ondragover="event.preventDefault();">
                 <CardHeader>
                     <CardTitle>Form</CardTitle>
                 </CardHeader>
@@ -79,7 +79,7 @@
 
                             <div
                                 class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
-                                ondragoverPreventDefault="true"
+                                ondragover="event.preventDefault();"
                                 @ondrop="@(e => OnDropAt(idx))">
                                 <Blazicon Svg="@Icons.Plus"/>
                             </div>
@@ -116,7 +116,7 @@
 
                         <div
                             class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
-                            ondragoverPreventDefault="true"
+                            ondragover="event.preventDefault();"
                             @ondrop="@(e => OnDropAt(UserForm.Fields.Count))">
                             <Blazicon Svg="@Icons.Plus"/>
                         </div>
