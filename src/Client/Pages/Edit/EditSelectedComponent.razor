@@ -24,7 +24,7 @@
         <FormField>
             <FormLabel for="type">Input type</FormLabel>
             <InputSelect id="type" @bind-Value="@textInput.InputType" class="@FormInputText.BaseClass">
-                @foreach (var value in (string[]) ["text", "tel", "url", "password", "search"])
+                @foreach (var value in (string[]) ["text", "tel", "url", "email", "password", "search"])
                 {
                     <option value="@value">@value</option>
                 }

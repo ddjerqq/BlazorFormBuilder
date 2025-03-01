@@ -6,14 +6,14 @@ namespace Domain.Entities;
 [JsonConverter(typeof(BaseComponentChoiceConverter))]
 public abstract class BaseComponentChoice
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; init; } = Guid.NewGuid();
     public required string Label { get; set; }
     public string? Description { get; set; }
-    public bool Required { get; set; } = false;
+    public bool Required { get; set; }
 
     public int Order { get; set; }
 
-    public required Guid FormId { get; set; }
+    public required Guid FormId { get; init; }
 
     public static BaseComponentChoice CreateDefault(Type componentType, Guid formId) => componentType.Name switch
     {
@@ -48,8 +48,8 @@ public abstract class BaseComponentChoice
         nameof(ButtonComponentChoice) => new ButtonComponentChoice
         {
             FormId = formId,
-            ButtonType = "button",
-            ButtonText = "Hire me!",
+            ButtonType = "submit",
+            ButtonText = "Submit",
             Label = "Button",
         },
         _ => throw new ArgumentException("Invalid component type"),

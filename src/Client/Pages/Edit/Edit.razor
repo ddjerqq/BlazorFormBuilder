@@ -7,7 +7,7 @@
 
 @if (UserForm is not null)
 {
-    <AppForm @bind-Model="UserForm" OnValidSubmit="@SaveForm">
+    <AppForm @bind-Model="UserForm" OnValidSubmit="@SaveForm" novalidate>
         <div class="w-full h-full grid grid-cols-1 md:grid-cols-3 gap-4">
             <FormField>
                 <FormLabel>Form name</FormLabel>

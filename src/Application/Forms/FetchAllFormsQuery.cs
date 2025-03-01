@@ -15,7 +15,7 @@ public sealed class FetchAllFormsQueryHandler(IAppDbContext dbContext, IMemoryCa
         var forms = await cache.GetOrCreateAsync<List<UserForm>>($"all-forms-{request.Page}-{request.PerPage}", async entry =>
         {
             var forms = await dbContext.Forms
-                .OrderBy(x => x.Id)
+                .OrderByDescending(x => x.Modified)
                 .Skip(request.Page * request.PerPage)
                 .Take(request.PerPage)
                 .ToListAsync(ct);

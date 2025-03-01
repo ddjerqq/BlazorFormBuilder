@@ -25,7 +25,7 @@
 
     @if (Component is SelectInput selectInput)
     {
-        <InputSelect id="@Component.Id" @bind-Value="@selectInput.SelectedOption" class="@FormInputText.BaseClass">
+        <InputSelect id="@Component.Id" @bind-Value="@selectInput.SelectedOption" class="@FormInputText.BaseClass" required="@selectInput.Required">
             @foreach (var value in selectInput.Choices)
             {
                 <option value="@value">@value</option>
@@ -36,13 +36,13 @@
 
     @if (Component is CheckboxInput checkboxInput)
     {
-        <Switch id="@Component.Id" @bind-Value="@checkboxInput.Checked"/>
+        <Switch id="@Component.Id" @bind-Value="@checkboxInput.Checked" required="@checkboxInput.Required"/>
         <FormInvalidFeedback For="@(() => checkboxInput.Checked)"/>
     }
 
     @if (Component is DateInput dateInput)
     {
-        <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass"
+        <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass" required="@dateInput.Required"
                    min="@(dateInput.DateMin?.ToString("yyyy-mm-dd"))" max="@(dateInput.DateMax?.ToString("yyyy-mm-dd"))" />
         <FormInvalidFeedback For="@(() => dateInput.SelectedDate)"/>
     }
