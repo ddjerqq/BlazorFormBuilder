@@ -2,11 +2,8 @@
 @typeparam TEntity where TEntity : class
 @attribute [CascadingTypeParameter(nameof(TEntity))]
 
-<EditForm EditContext="EditContext" OnSubmit="OnSubmit" FormName="@FormName" Enhance novalidate class="grid gap-4 sm:gap-6" @attributes="@AdditionalAttributes">
+<EditForm EditContext="EditContext" OnSubmit="OnSubmit" FormName="@FormName" Enhance class="grid gap-4 sm:gap-6" @attributes="@AdditionalAttributes">
     <DataAnnotationsValidator/>
-    @* we could support fluent validation really easily, if we uncommented the bottom line and added some validation logic in OnSubmit *@
-    @* <FluentValidationValidator @ref="FluentValidationValidator" /> *@
-
     @ChildContent
 </EditForm>
 

@@ -37,6 +37,12 @@
         </FormField>
 
         <FormField>
+            <FormLabel for="regex-pattern">Regex pattern</FormLabel>
+            <FormInputText id="regex-pattern" @bind-Value="@textInput.Pattern"/>
+            <FormDescription>Enter your desired regex pattern here, or leave empty</FormDescription>
+        </FormField>
+
+        <FormField>
             <FormLabel for="default-value">Default value</FormLabel>
             <FormInputText id="default-value" @bind-Value="@textInput.TextValue"/>
             <FormDescription>Edit the default value, or leave empty</FormDescription>

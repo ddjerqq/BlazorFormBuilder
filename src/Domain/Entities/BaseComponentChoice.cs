@@ -21,30 +21,29 @@ public abstract class BaseComponentChoice
         {
             FormId = formId,
             InputType = "text",
-            Placeholder = "...",
-            Label = "TextInput",
+            Label = "Text",
         },
         nameof(NumberInput) => new NumberInput
         {
             FormId = formId,
-            Label = "NumberInput",
+            Label = "Number",
         },
         nameof(SelectInput) => new SelectInput
         {
             FormId = formId,
             Choices = [],
-            Label = "SelectInput",
+            Label = "Select",
         },
         nameof(CheckboxInput) => new CheckboxInput
         {
             FormId = formId,
-            Label = "CheckboxInput",
+            Label = "Switch",
         },
         nameof(DateInput) => new DateInput
         {
             FormId = formId,
             InputType = "datetime-local",
-            Label = "DateInput",
+            Label = "Date",
         },
         nameof(ButtonComponentChoice) => new ButtonComponentChoice
         {

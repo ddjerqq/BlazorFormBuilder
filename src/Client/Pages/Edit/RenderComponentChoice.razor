@@ -8,8 +8,9 @@
     {
         <FormInputText
             id="@Component.Id" @bind-Value="@textInput.TextValue"
-            type="@textInput.InputType" placeholder="@textInput.Placeholder" required="@textInput.Required"/>
-        @* <FormInvalidFeedback For="@(() => textInput.Value)"/> *@
+            type="@textInput.InputType" placeholder="@textInput.Placeholder" required="@textInput.Required"
+            pattern="@textInput.Pattern"/>
+        <FormInvalidFeedback For="@(() => textInput.TextValue)"/>
     }
 
     @if (Component is NumberInput numberInput)
@@ -19,6 +20,7 @@
             class="@FormInputText.BaseClass"
             id="@Component.Id" @bind-Value="@numberInput.SelectedNumericValue"
             min="@numberInput.Min" max="@numberInput.Max" step="@numberInput.Step" required="@numberInput.Required"/>
+        <FormInvalidFeedback For="@(() => numberInput.SelectedNumericValue)"/>
     }
 
     @if (Component is SelectInput selectInput)
@@ -29,16 +31,19 @@
                 <option value="@value">@value</option>
             }
         </InputSelect>
+        <FormInvalidFeedback For="@(() => selectInput.SelectedOption)"/>
     }
 
     @if (Component is CheckboxInput checkboxInput)
     {
         <Switch id="@Component.Id" @bind-Value="@checkboxInput.Checked"/>
+        <FormInvalidFeedback For="@(() => checkboxInput.Checked)"/>
     }
 
     @if (Component is DateInput dateInput)
     {
         <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass"/>
+        <FormInvalidFeedback For="@(() => dateInput.SelectedDate)"/>
     }
 
     @if (Component is ButtonComponentChoice button)
