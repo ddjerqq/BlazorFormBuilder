@@ -1,14 +1,14 @@
 ﻿@page "/edit/{Id:guid}"
 @attribute [StreamRendering]
-@using Client.Components.Ui.Form
 @using Domain.Entities
+@using Client.Components.Ui.Form
 
 <PageTitle>Create new form</PageTitle>
 
 @if (UserForm is not null)
 {
     <AppForm @bind-Model="UserForm" OnValidSubmit="@SaveForm">
-        <div class="w-full h-full grid grid-cols-3 gap-4">
+        <div class="w-full h-full grid grid-cols-1 md:grid-cols-3 gap-4">
             <FormField>
                 <FormLabel>Form name</FormLabel>
                 <FormInputText @bind-Value="UserForm.Name" required/>
@@ -19,58 +19,71 @@
                 <Button type="submit" Variant="default">
                     <Blazicon Svg="@Icons.Save"/>
                     Save
+                    @if (_hasChangesSinceLastSave)
+                    {
+                        <span>(unsaved)</span>
+                    }
                 </Button>
             </FormField>
 
             <FormField>
                 <FormLabel>Click to preview</FormLabel>
-                <Button type="button" Variant="outline" @onclick="@Preview">
+                <Button type="button" Variant="outline" @onclick="@Preview" disabled="@_hasChangesSinceLastSave">
                     <Blazicon Svg="@Icons.Play"/>
                     Preview
+                    @if (_hasChangesSinceLastSave)
+                    {
+                        @:(Please save changes)
+                    }
                 </Button>
             </FormField>
+        </div>
 
-            <span>Components</span>
-            <span>Form</span>
-            <span>Edit selected component</span>
+        <div class="w-full h-full grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Card id="element-picker">
+                <CardHeader>
+                    <CardTitle>Components</CardTitle>
+                </CardHeader>
+                <CardContent class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-background">
+                    @foreach (var componentType in PickerComponents)
+                    {
+                        var currentlyDragging = _draggingComponentType == componentType;
+                        var borderClass = currentlyDragging ? "border-primary" : "border-border";
+                        var component = BaseComponentChoice.CreateDefault(componentType, UserForm.Id);
 
-            <div id="element-picker"
-                 class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-background">
-                @foreach (var componentType in PickerComponents)
-                {
-                    var currentlyDragging = _draggingComponentType == componentType;
-                    var borderClass = currentlyDragging ? "border-primary" : "border-border";
-                    var component = BaseComponentChoice.CreateDefault(componentType, UserForm.Id);
+                        <div
+                            class="@($"p-4 bg-secondary text-secondary-foreground rounded-md border-2 border-dashed text-center align-middle {borderClass}")"
+                            draggable="true"
+                            @ondragstart="@(() => OnPickerDragStart(componentType))" @ondragend="OnDragEnd">
 
-                    <div class="@($"p-4 bg-secondary text-secondary-foreground rounded-md border-2 border-dashed text-center align-middle {borderClass}")"
-                         draggable="true"
-                         @ondragstart="@(() => OnPickerDragStart(componentType))" @ondragend="OnDragEnd">
+                            <RenderComponentChoice Component="component"/>
+                        </div>
+                    }
+                </CardContent>
+            </Card>
 
-                        <RenderComponentChoice Component="component"/>
-                    </div>
-                }
-            </div>
+            <Card id="builder" ondragoverPreventDefault="true">
+                <CardHeader>
+                    <CardTitle>Form</CardTitle>
+                </CardHeader>
+                <CardContent class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-graph-paper">
+                    @foreach (var (idx, componentChoice) in UserForm.Fields.Index())
+                    {
+                        var currentlyEditing = CurrentlyEditing?.Id == componentChoice.Id;
+                        var borderClass = currentlyEditing ? "border-primary" : "border-border";
 
-            <div id="builder" class="flex flex-col justify-start items-stretch gap-2 rounded-md border-2 border-dashed p-4 bg-graph-paper"
-                 ondragoverPreventDefault="true">
+                        <div
+                            class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
+                            ondragoverPreventDefault="true"
+                            @ondrop="@(e => OnDropAt(idx))">
+                            <Blazicon Svg="@Icons.Plus"/>
+                        </div>
 
-                @foreach (var (idx, componentChoice) in UserForm.Fields.Index())
-                {
-                    var currentlyEditing = CurrentlyEditing?.Id == componentChoice.Id;
-                    var borderClass = currentlyEditing ? "border-primary" : "border-border";
-
-                    <div
-                        class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
-                        ondragoverPreventDefault="true"
-                        @ondrop="@(e => OnDropAt(idx))">
-                        <Blazicon Svg="@Icons.Plus"/>
-                    </div>
-
-                    <span
-                        class="@($"relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed rounded-md text-center align-middle {borderClass}")"
-                        draggable="true"
-                        @ondragstart="@(() => OnBuilderDragStart(idx))"
-                        @ondragend="OnDragEnd">
+                        <span
+                            class="@($"relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed rounded-md text-center align-middle {borderClass}")"
+                            draggable="true"
+                            @ondragstart="@(() => OnBuilderDragStart(idx))"
+                            @ondragend="OnDragEnd">
 
                         <div class="block mb-5 p-4">
                             <RenderComponentChoice Component="componentChoice"/>
@@ -93,15 +106,16 @@
                             <Blazicon Svg="@Icons.X"/>
                         </span>
                     </span>
-                }
+                    }
 
-                <div
-                    class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
-                    ondragoverPreventDefault="true"
-                    @ondrop="@(e => OnDropAt(UserForm.Fields.Count))">
-                    <Blazicon Svg="@Icons.Plus"/>
-                </div>
-            </div>
+                    <div
+                        class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
+                        ondragoverPreventDefault="true"
+                        @ondrop="@(e => OnDropAt(UserForm.Fields.Count))">
+                        <Blazicon Svg="@Icons.Plus"/>
+                    </div>
+                </CardContent>
+            </Card>
 
             <Card id="edit-panel" class="border-2 border-dashed">
                 @if (CurrentlyEditing is not null)

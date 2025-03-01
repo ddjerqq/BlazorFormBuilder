@@ -44,8 +44,12 @@ echo "/path/to/solution/app.db" > .env
 > Replace `/path/to/solution/app.db` with the path to your solution.
 
 ### 🌐 Run the app
-```sh 
-dotnet watch run --project src/WebApi/WebApi.csproj
+```sh
+cd src/Client
+npm i
+cd ..
+cd ..
+dotnet run --project src/WebApi/WebApi.csproj
 ```
 > [!NOTE] 
 > Building tailwind classes, seeding the database will all get taken care of automatically, 
@@ -61,3 +65,6 @@ This project is licensed under the GNU General purpose license – see the [LICE
 ![myforms.webp](images/myforms.webp)
 ![myforms_dark.webp](images/myforms_dark.webp)
 ![preview.webp](images/preview.webp)
+![numeric.webp](images/numeric.webp)
+![text.webp](images/text.webp)
+![validation.webp](images/validation.webp)

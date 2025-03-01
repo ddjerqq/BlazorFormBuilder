@@ -17,6 +17,8 @@ public partial class Edit
     [Parameter]
     public Guid Id { get; set; }
 
+    private bool _hasChangesSinceLastSave;
+
     private UserForm? UserForm { get; set; }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -42,6 +44,7 @@ public partial class Edit
 
     private async Task SaveForm()
     {
+        _hasChangesSinceLastSave = false;
         UserForm!.SortFields();
         await Api.UpdateForm(UserForm!, CancellationToken);
         ShowSuccess("Form saved successfully");
@@ -91,6 +94,7 @@ public partial class Edit
 
     private void OnDropAt(int index)
     {
+        _hasChangesSinceLastSave = true;
         if (_isDraggingFromPicker && _draggingComponentType != null)
         {
             var component = BaseComponentChoice.CreateDefault(_draggingComponentType, UserForm!.Id);
@@ -118,6 +122,7 @@ public partial class Edit
 
     private void RemoveItem(int index)
     {
+        _hasChangesSinceLastSave = true;
         // if we remove the component we're currently editing,
         // then stop editing
         if (CurrentlyEditing == UserForm!.Fields[index])
@@ -130,6 +135,7 @@ public partial class Edit
 
     private void EditItem(int index)
     {
+        _hasChangesSinceLastSave = true;
         CurrentlyEditing = UserForm!.Fields[index];
         StateHasChanged();
     }
