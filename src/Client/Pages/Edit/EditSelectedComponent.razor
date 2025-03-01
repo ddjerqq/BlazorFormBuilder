@@ -52,6 +52,11 @@
     @if (Component is NumberInput numberInput)
     {
         <FormField>
+            <FormLabel for="numeric-default">Default value</FormLabel>
+            <InputNumber id="numeric-default" @bind-Value="@numberInput.SelectedNumericValue" class="@FormInputText.BaseClass"/>
+        </FormField>
+
+        <FormField>
             <FormLabel for="min">Minimum</FormLabel>
             <InputNumber id="min" @bind-Value="@numberInput.Min" class="@FormInputText.BaseClass"/>
         </FormField>
@@ -107,7 +112,7 @@
     {
         <FormField>
             <FormLabel for="date-type">Date type</FormLabel>
-            <InputSelect id="date-type" @bind-Value="@dateInput.InputType" class="@FormInputText.BaseClass">
+            <InputSelect id="date-type" @bind-Value="@dateInput.InputType" class="@FormInputText.BaseClass" required>
                 @foreach (var value in (string[]) ["date", "month", "time", "datetime-local"])
                 {
                     <option value="@value">@value</option>
@@ -120,6 +125,18 @@
             <InputDate id="default-value" class="@FormInputText.BaseClass"
                        @bind-Value="@dateInput.SelectedDate" Type="@dateInput.GetInputDateType()"/>
             <FormDescription>Edit the default value</FormDescription>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="min-value">Min value</FormLabel>
+            <InputDate id="min-value" class="@FormInputText.BaseClass"
+                       @bind-Value="@dateInput.DateMin" Type="@dateInput.GetInputDateType()"/>
+        </FormField>
+
+        <FormField>
+            <FormLabel for="max-value">Max value</FormLabel>
+            <InputDate id="max-value" class="@FormInputText.BaseClass"
+                       @bind-Value="@dateInput.DateMax" Type="@dateInput.GetInputDateType()"/>
         </FormField>
     }
 

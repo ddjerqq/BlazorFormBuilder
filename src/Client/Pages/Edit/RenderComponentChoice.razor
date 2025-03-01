@@ -42,7 +42,8 @@
 
     @if (Component is DateInput dateInput)
     {
-        <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass"/>
+        <InputDate id="@Component.Id" @bind-Value="@dateInput.SelectedDate" class="@FormInputText.BaseClass"
+                   min="@(dateInput.DateMin?.ToString("yyyy-mm-dd"))" max="@(dateInput.DateMax?.ToString("yyyy-mm-dd"))" />
         <FormInvalidFeedback For="@(() => dateInput.SelectedDate)"/>
     }
 

@@ -7,5 +7,8 @@ public sealed class DateInput : BaseComponentChoice
 {
     public DateTime SelectedDate { get; set; } = DateTime.UtcNow;
 
+    public DateTime? DateMin { get; set; }
+    public DateTime? DateMax { get; set; }
+
     public required string InputType { get; set; }
 }
