@@ -16,38 +16,38 @@
                 <CardHeader>
                     <CardTitle>@form.Name</CardTitle>
                 </CardHeader>
-                <CardContent class="space-y-4">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <Button Href="@($"/preview/{form.Id}")" Variant="default">
-                            <Blazicon Svg="@Icons.Play"/>
-                            Preview
-                        </Button>
-
-                        <Button Href="@($"/edit/{form.Id}")" Variant="secondary">
+                <CardContent class="space-y-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <Button Href="@($"/edit/{form.Id}")" Variant="default">
                             <Blazicon Svg="@Icons.Pencil"/>
                             Edit
                         </Button>
 
-                        <Button @onclick="@(async () => await DeleteForm(form))" Variant="destructive">
+                        <Button Href="@($"/preview/{form.Id}")" Variant="outline">
+                            <Blazicon Svg="@Icons.Play"/>
+                            Preview
+                        </Button>
+
+                        <Button @onclick="@(async () => await DeleteForm(form))" Variant="destructive" class="col-span-2 sm:col-span-1">
                             <Blazicon Svg="@Icons.Trash"/>
                             Delete
                         </Button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <Button Variant="outline" disabled>
                             <Blazicon Svg="@Icons.CalendarPlus"/>
-                            Created: <time>@form.Created.ToString("s")</time>
+                            Created: <time>@form.Created.ToString("yyyy-MM-dd")</time>
                         </Button>
 
                         <Button Variant="outline" disabled>
                             <Blazicon Svg="@Icons.CalendarCog"/>
-                            Modified: <time>@form.Modified.ToString("s")</time>
+                            Modified: <time>@form.Modified.ToString("yyyy-MM-dd")</time>
                         </Button>
                     </div>
                 </CardContent>
                 <CardFooter class="text-xs text-muted-foreground">
-                    @form.Id
+                    Form ID: @form.Id
                 </CardFooter>
             </Card>
         }

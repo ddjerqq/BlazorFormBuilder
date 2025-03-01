@@ -48,7 +48,7 @@ public abstract class BaseComponentChoice
         nameof(ButtonComponentChoice) => new ButtonComponentChoice
         {
             FormId = formId,
-            ButtonType = "submit",
+            ButtonType = "button",
             ButtonText = "Submit",
             Label = "Button",
         },

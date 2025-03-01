@@ -43,7 +43,7 @@ echo "/path/to/solution/app.db" > .env
 > [!WARNING]
 > Replace `/path/to/solution/app.db` with the path to your solution.
 
-### 🌐 Run the app
+### ▶️ Run the app
 ```sh
 cd src/Client
 npm i
@@ -54,6 +54,9 @@ dotnet run --project src/WebApi/WebApi.csproj
 > [!NOTE] 
 > Building tailwind classes, seeding the database will all get taken care of automatically, 
 > you don't have to worry about configurations, as long as you have all the required dependencies 
+
+### 🌐 Head over to the website
+Open https://localhost in your browser to accesst he website
 
 ## 📜 License
 This project is licensed under the GNU General purpose license – see the [LICENSE](LICENSE) file for details.

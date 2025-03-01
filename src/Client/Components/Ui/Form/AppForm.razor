@@ -43,7 +43,8 @@
         if (Model is null || !ModelChanged.HasDelegate)
             throw new ArgumentException("you must bind a model to the form bidirectionally using @bind-Model");
 
-        ValidationCssClassProvider ??= new CustomValidationCssClassProvider("valid", "invalid");
+        // ValidationCssClassProvider ??= new CustomValidationCssClassProvider("valid", "invalid");
+        ValidationCssClassProvider ??= new CustomValidationCssClassProvider("", "");
 
         if (EditContext is null)
         {

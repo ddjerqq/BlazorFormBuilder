@@ -30,12 +30,12 @@ else
         var v = variant switch
         {
             "default" => "bg-primary text-primary-foreground hover:bg-primary/90",
-            "destructive" => "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+            "destructive" => "border-destructive bg-background hover:bg-destructive/90 text-destructive hover:text-primary border",
             "outline" => "border-input bg-background hover:bg-accent hover:text-accent-foreground border",
             "secondary" => "bg-secondary text-secondary-foreground hover:bg-secondary/80",
             "ghost" => "hover:bg-accent hover:text-accent-foreground",
             "link" => "text-primary underline-offset-4 hover:underline",
-            _ => throw new ArgumentException("Invalid variant", nameof(Variant)),
+            _ => throw new ArgumentException($"Invalid variant: {variant}", nameof(Variant)),
         };
 
         var s = size switch
@@ -44,7 +44,7 @@ else
             "md" => "h-10 px-4 py-2",
             "lg" => "h-11 rounded-md px-8",
             "icon" => "size-10",
-            _ => throw new ArgumentException("Invalid size", nameof(Size)),
+            _ => throw new ArgumentException($"Invalid size: {size}", nameof(Size)),
         };
 
         return tw.Merge(BaseClass, v, s, @class) ?? BaseClass;
