@@ -2,24 +2,29 @@
 using Domain.Aggregates;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Forms;
 
 public sealed record FetchAllFormsQuery(int Page, int PerPage) : IRequest<IEnumerable<UserForm>>;
 
-public sealed class FetchAllFormsQueryHandler(IAppDbContext dbContext) : IRequestHandler<FetchAllFormsQuery, IEnumerable<UserForm>>
+public sealed class FetchAllFormsQueryHandler(IAppDbContext dbContext, IMemoryCache cache) : IRequestHandler<FetchAllFormsQuery, IEnumerable<UserForm>>
 {
     public async Task<IEnumerable<UserForm>> Handle(FetchAllFormsQuery request, CancellationToken ct)
     {
-        // caching will be possible here, and i will implement it if i have time,
-        // just so i can show off, how much of a 10x developer i really am ;)
+        var forms = await cache.GetOrCreateAsync<List<UserForm>>($"all-forms-{request.Page}-{request.PerPage}", async entry =>
+        {
+            var forms = await dbContext.Forms
+                .OrderBy(x => x.Id)
+                .Skip(request.Page * request.PerPage)
+                .Take(request.PerPage)
+                .ToListAsync(ct);
 
-        var forms = await dbContext.Forms
-            .OrderBy(x => x.Id)
-            .Skip(request.Page * request.PerPage)
-            .Take(request.PerPage)
-            .ToListAsync(ct);
+            entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
+            return forms;
+        });
 
-        return forms;
+
+        return forms!;
     }
 }

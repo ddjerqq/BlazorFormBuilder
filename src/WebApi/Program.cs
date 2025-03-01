@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region application services
 
+builder.Services.AddMemoryCache();
 builder.Services.AddValidatorsFromAssembly(Application.Application.Assembly, includeInternalTypes: true);
 builder.Services.AddMediatR(cfg =>
 {

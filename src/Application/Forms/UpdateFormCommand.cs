@@ -2,15 +2,18 @@
 using Domain.Aggregates;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Application.Forms;
 
 public sealed record UpdateFormCommand(UserForm Form) : IRequest;
 
-public sealed class UpdateFormCommandHandler(IAppDbContext dbContext) : IRequestHandler<UpdateFormCommand>
+public sealed class UpdateFormCommandHandler(IAppDbContext dbContext, IMemoryCache cache) : IRequestHandler<UpdateFormCommand>
 {
     public async Task Handle(UpdateFormCommand request, CancellationToken ct)
     {
+        cache.Remove($"form-{request.Form.Id}");
+
         var existingForm = await dbContext.Forms.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.Form.Id, ct);
         if (existingForm is null)
             throw new InvalidOperationException("Form not found");

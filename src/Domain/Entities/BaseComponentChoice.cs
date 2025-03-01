@@ -15,7 +15,6 @@ public abstract class BaseComponentChoice
 
     public required Guid FormId { get; set; }
 
-    [Obsolete("TODO move this to children, maybe default constructors?")]
     public static BaseComponentChoice CreateDefault(Type componentType, Guid formId) => componentType.Name switch
     {
         nameof(TextInput) => new TextInput
