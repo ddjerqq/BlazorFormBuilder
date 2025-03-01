@@ -84,6 +84,19 @@ public partial class Edit
         _isDraggingFromPicker = false;
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await using var module = await Js.InvokeAsync<IJSObjectReference>("import", CancellationToken, "./Pages/Edit/Edit.razor.js");
+        await module.InvokeAsync<string>("SetupDragEvents", CancellationToken, DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void DropFromJs(int dropZoneIndex)
+    {
+        // Call the same drop logic as from the normal event handlers.
+        OnDropAt(dropZoneIndex);
+    }
+
     private void OnDropAt(int index)
     {
         _hasChangesSinceLastSave = true;

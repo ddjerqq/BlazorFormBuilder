@@ -9,15 +9,15 @@
         <CardTitle>My forms</CardTitle>
         <CardDescription>Create, Edit, or remove your forms here</CardDescription>
     </CardHeader>
-    <CardContent class="grid gap-4">
+    <CardContent class="grid gap-2 sm:gap-3">
         @foreach (var form in Forms)
         {
             <Card>
                 <CardHeader>
                     <CardTitle>@form.Name</CardTitle>
                 </CardHeader>
-                <CardContent class="space-y-3">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <CardContent class="space-y-2 sm:space-y-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
                         <Button Href="@($"/edit/{form.Id}")" Variant="default">
                             <Blazicon Svg="@Icons.Pencil"/>
                             Edit
@@ -34,7 +34,7 @@
                         </Button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3">
                         <Button Variant="outline" disabled>
                             <Blazicon Svg="@Icons.CalendarPlus"/>
                             Created: <time>@form.Created.ToString("yyyy-MM-dd")</time>
@@ -47,7 +47,7 @@
                     </div>
                 </CardContent>
                 <CardFooter class="text-xs text-muted-foreground">
-                    Form ID: @form.Id
+                    ID: @form.Id
                 </CardFooter>
             </Card>
         }

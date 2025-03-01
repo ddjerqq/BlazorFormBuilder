@@ -11,7 +11,7 @@
 
 <h1 class="mb-4 font-bold text-2xl">Form preview</h1>
 
-<div class="flex justify-start gap-4 mb-4">
+<div class="hidden sm:flex justify-start gap-2 sm:gap-3 mb-4">
     <Button Variant="outline" Size="icon" @onclick="@(() => Width = "w-full")">
         <Blazicon Svg="@Icons.Monitor"/>
     </Button>
@@ -33,7 +33,7 @@
                 <CardTitle>@Form.Name</CardTitle>
             </CardHeader>
             <CardContent>
-                <AppForm @bind-Model="Form" OnValidSubmit="OnValidSubmit" class="grid gap-4">
+                <AppForm @bind-Model="Form" OnValidSubmit="OnValidSubmit" class="grid gap-2 sm:gap-3">
                     @foreach (var field in Form.Fields)
                     {
                         <RenderComponentChoice Component="field"/>
@@ -41,7 +41,7 @@
                 </AppForm>
             </CardContent>
             <CardFooter class="text-xs text-muted-foreground">
-                Form ID: @Form.Id
+                ID: @Form.Id
             </CardFooter>
         </Card>
     </div>

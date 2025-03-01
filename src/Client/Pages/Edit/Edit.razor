@@ -8,7 +8,7 @@
 @if (UserForm is not null)
 {
     <AppForm @bind-Model="UserForm" OnValidSubmit="@SaveForm" novalidate>
-        <div class="w-full h-full grid grid-cols-2 sm:grid-cols-3 gap-4">
+        <div class="w-full h-full grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
             <FormField class="col-span-2 sm:col-span-1">
                 <FormLabel>Form name</FormLabel>
                 <FormInputText @bind-Value="UserForm.Name" required/>
@@ -39,13 +39,13 @@
             </FormField>
         </div>
 
-        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3">
             <Card id="element-picker">
                 <CardHeader>
                     <CardTitle>Components</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ul class="flex flex-col justify-start items-stretch gap-2">
+                    <ul class="flex flex-col justify-start items-stretch gap-2 sm:gap-3">
                         @foreach (var componentType in PickerComponents)
                         {
                             var currentlyDragging = _draggingComponentType == componentType;
@@ -81,7 +81,7 @@
                         var borderClass = currentlyEditing || currentlyDragging ? "border-primary" : "border-border";
 
                         <div
-                            class="drop-zone h-full grow flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
+                            class="drop-zone flex justify-center items-center p-4 rounded-md border-2 border-dashed backdrop-blur-sm"
                             ondragover="event.preventDefault();"
                             @ondrop="@(_ => OnDropAt(idx))">
                             <Blazicon Svg="@Icons.Plus"/>
@@ -90,12 +90,10 @@
                         <span
                             class="@($"relative p-4 bg-secondary text-secondary-foreground border-2 border-dashed rounded-md text-center align-middle {borderClass}")"
                             draggable="true"
-                            style="touch-action: none;"
                             @ondragstart="@(() => OnBuilderDragStart(idx))"
                             @ontouchstart="@(() => OnBuilderDragStart(idx))"
                             @ondragend="@OnDragEnd"
                             @ontouchend="@OnDragEnd">
-
                                 <div class="block mb-5 p-4">
                                     <RenderComponentChoice Component="componentChoice"/>
                                 </div>
@@ -106,12 +104,14 @@
                                 </span>
 
                                 <span @onclick="@(() => EditItem(idx))"
+                                      @ontouchstart="@(() => EditItem(idx))"
                                       class="absolute top-0 right-7 cursor-pointer bg-primary text-primary-foreground p-2 text-xs"
                                       draggable="false">
                                     <Blazicon Svg="@Icons.Pencil"/>
                                 </span>
 
                                 <span @onclick="@(() => RemoveItem(idx))"
+                                      @ontouchstart="@(() => RemoveItem(idx))"
                                       class="absolute top-0 right-0 cursor-pointer bg-destructive text-destructive-foreground p-2 text-xs rounded-tr-sm"
                                       draggable="false">
                                     <Blazicon Svg="@Icons.X"/>
@@ -120,7 +120,7 @@
                     }
 
                     <div
-                        class="max-h-10 drop-zone grow flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
+                        class="drop-zone flex justify-center items-center p-4 rounded-md border-2 border-dashed border-border backdrop-blur-sm"
                         ondragover="event.preventDefault();"
                         @ondrop="@(_ => OnDropAt(UserForm.Fields.Count))"
                         @ontouchend="@(_ => OnDropAt(UserForm.Fields.Count))">
