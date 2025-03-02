@@ -61,6 +61,7 @@ public partial class Edit
 
     private BaseComponentChoice? CurrentlyEditing { get; set; }
 
+    private int _mobileComponentSelectedIndex = 0;
     private bool _isDraggingFromPicker;
     private int? _draggingIndex;
     private Type? _draggingComponentType;

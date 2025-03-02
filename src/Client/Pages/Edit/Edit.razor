@@ -31,10 +31,6 @@
                 <Button type="button" Variant="outline" @onclick="@Preview" disabled="@_hasChangesSinceLastSave">
                     <Blazicon Svg="@Icons.Play"/>
                     Preview
-                    @if (_hasChangesSinceLastSave)
-                    {
-                        @:(Please save changes)
-                    }
                 </Button>
             </FormField>
         </div>
@@ -45,25 +41,58 @@
                     <CardTitle>Components</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <ul class="flex flex-col justify-start items-stretch gap-2 sm:gap-3">
+                    <ul class="grid grid-cols-[40px_1fr_40px] justify-center align-middle items-center gap-2 sm:hidden">
+                        @{
+                            var mobileComponentType = PickerComponents[_mobileComponentSelectedIndex];
+                            var mobileCurrentlyDragging = _draggingComponentType == mobileComponentType;
+                            var mobileBorderClass = mobileCurrentlyDragging ? "border-primary" : "border-border";
+                            var mobileComponent = BaseComponentChoice.CreateDefault(mobileComponentType, UserForm.Id);
+
+                            var canGoBack = _mobileComponentSelectedIndex > 0;
+                            var canGoForward = _mobileComponentSelectedIndex < PickerComponents.Count - 1;
+                        }
+
+                        <Button Variant="outline" Size="icon" class="shrink-0"
+                                type="button" disabled="@(!canGoBack)" @onclick="@(() => _mobileComponentSelectedIndex -= 1)">
+                            <Blazicon Svg="@Icons.ArrowLeft"/>
+                        </Button>
+
+                        <li
+                            class="@($"p-4 grow bg-secondary text-secondary-foreground rounded-md border-2 border-dashed text-center align-middle {mobileBorderClass}")"
+                            draggable="true"
+                            style="touch-action: none;"
+                            @ondragstart="@(() => OnPickerDragStart(mobileComponentType))"
+                            @ontouchstart="@(() => OnPickerDragStart(mobileComponentType))"
+                            @ondragend="@OnDragEnd"
+                            @ontouchend="@OnDragEnd">
+
+                            <RenderComponentChoice Component="mobileComponent"/>
+                        </li>
+
+                        <Button Variant="outline" Size="icon" class="shrink-0"
+                                type="button" disabled="@(!canGoForward)" @onclick="@(() => _mobileComponentSelectedIndex += 1)">
+                            <Blazicon Svg="@Icons.ArrowRight"/>
+                        </Button>
+                    </ul>
+
+                    <ul class="hidden sm:flex flex-col justify-start items-stretch gap-2 sm:gap-3">
                         @foreach (var componentType in PickerComponents)
                         {
                             var currentlyDragging = _draggingComponentType == componentType;
                             var borderClass = currentlyDragging ? "border-primary" : "border-border";
                             var component = BaseComponentChoice.CreateDefault(componentType, UserForm.Id);
 
-                            <div
+                            <li
                                 class="@($"p-4 bg-secondary text-secondary-foreground rounded-md border-2 border-dashed text-center align-middle {borderClass}")"
                                 draggable="true"
                                 style="touch-action: none;"
                                 @ondragstart="@(() => OnPickerDragStart(componentType))"
                                 @ontouchstart="@(() => OnPickerDragStart(componentType))"
-                                ontouchmove="console.log(event);"
                                 @ondragend="@OnDragEnd"
                                 @ontouchend="@OnDragEnd">
 
                                 <RenderComponentChoice Component="component"/>
-                            </div>
+                            </li>
                         }
                     </ul>
                 </CardContent>
