@@ -157,14 +157,21 @@
             <FormInputText id="button-text" @bind-Value="@button.ButtonText"/>
         </FormField>
     }
+
+    @if (Component is GridComponent gridInput)
+    {
+        <FormField>
+            <EditGrid @bind-Grid="gridInput"/>
+        </FormField>
+    }
 </AppForm>
 
 @code {
     private string SelectInputTempValue { get; set; } = null!;
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired] 
     public BaseComponentChoice Component { get; set; } = null!;
 
-    [Parameter, EditorRequired]
+    [Parameter, EditorRequired] 
     public EventCallback<BaseComponentChoice> ComponentChanged { get; set; }
 }

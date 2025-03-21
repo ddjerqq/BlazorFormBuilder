@@ -1,10 +1,11 @@
+using System.Numerics;
 using System.Reflection;
 using Application.Services;
 using Domain.Aggregates;
 using Domain.Common;
 using Domain.Entities;
+using Infrastructure.Persistence.ValueConverters;
 using Microsoft.EntityFrameworkCore;
-using Persistence.ValueConverters;
 
 namespace Infrastructure.Persistence;
 
@@ -27,6 +28,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
             .Properties<DateTime>()
             .HaveConversion<DateTimeToUtcDateTimeValueConverter>();
 
+        builder.Properties<Vector2>().HaveConversion<Vec2ToStringValueConverter>();
+        builder.Properties<string[][]>().HaveConversion<StringMatrixToStringValueConverter>();
         base.ConfigureConventions(builder);
     }
 

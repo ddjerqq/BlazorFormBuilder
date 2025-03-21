@@ -34,6 +34,11 @@ public abstract class BaseComponentChoice
             Choices = [],
             Label = "Select",
         },
+        nameof(GridComponent) => new GridComponent()
+        {
+            FormId = formId,
+            Label = "Grid",
+        },
         nameof(CheckboxInput) => new CheckboxInput
         {
             FormId = formId,

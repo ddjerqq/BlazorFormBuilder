@@ -46,6 +46,7 @@ builder.Services.AddCors(opt => opt.AddDefaultPolicy(cors =>
 builder.Services.Configure<JsonOptions>(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new BaseComponentChoiceConverter());
+    options.JsonSerializerOptions.Converters.Add(new Vec2StringJsonConverter());
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
 });
 

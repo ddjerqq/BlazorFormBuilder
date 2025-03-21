@@ -1,0 +1,27 @@
+﻿@using Domain.Entities
+@inherits UiComponentBase
+
+<div class="grid @ColumnClass gap-1 justify-stretch">
+    @foreach (var row in Grid.Data)
+    {
+        foreach (var col in row)
+        {
+            <span class="text-primary">@col</span>
+        }
+    }
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public GridComponent Grid { get; set; } = null!;
+
+    private string ColumnClass => Grid.Dimensions.Y switch
+    {
+        -1 or 0 or 1 => "grid-cols-1",
+        2 => "grid-cols-2",
+        3 => "grid-cols-3",
+        _ => throw new NotImplementedException()
+    };
+
+}

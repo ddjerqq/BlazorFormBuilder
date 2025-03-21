@@ -26,6 +26,7 @@ public class BaseComponentChoiceConverter : JsonConverter<BaseComponentChoice>
             "checkbox" => JsonSerializer.Deserialize<CheckboxInput>(json, options) ?? throw new JsonException("Failed to deserialize CheckboxInput."),
             "date" => JsonSerializer.Deserialize<DateInput>(json, options) ?? throw new JsonException("Failed to deserialize DateInput."),
             "button" => JsonSerializer.Deserialize<ButtonComponentChoice>(json, options) ?? throw new JsonException("Failed to deserialize ButtonComponentChoice."),
+            "grid" => JsonSerializer.Deserialize<GridComponent>(json, options) ?? throw new JsonException("Failed to deserialize GridComponent."),
             _ => throw new JsonException($"Unknown type discriminator: {typeDiscriminator}")
         };
     }
@@ -59,6 +60,10 @@ public class BaseComponentChoiceConverter : JsonConverter<BaseComponentChoice>
             case ButtonComponentChoice button:
                 writer.WriteString("type", "button");
                 WriteProperties(writer, button, options);
+                break;
+            case GridComponent grid:
+                writer.WriteString("type", "grid");
+                WriteProperties(writer, grid, options);
                 break;
             default:
                 throw new NotSupportedException($"Type {value.GetType()} is not supported by this converter.");

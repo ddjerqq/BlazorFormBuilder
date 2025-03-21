@@ -57,6 +57,7 @@ public partial class Edit
         typeof(CheckboxInput),
         typeof(DateInput),
         typeof(ButtonComponentChoice),
+        typeof(GridComponent),
     ];
 
     private BaseComponentChoice? CurrentlyEditing { get; set; }
