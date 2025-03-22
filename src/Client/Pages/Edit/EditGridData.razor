@@ -1,24 +1,25 @@
 ﻿@using Domain.Entities
+
 <div id="grid-choose-dimensions" class="@($"grid {ColumnClass} gap-2 justify-stretch")">
     @foreach (var (rowIdx, row) in Grid.Data.Index())
     {
-        foreach (var (colIdx, col) in row.Index())
+        foreach (var (colIdx, _) in row.Index())
         {
             <input
                 value="@(Grid.Data[rowIdx][colIdx])"
                 @onchange="@(async (ChangeEventArgs args) => await UpdateColumn(args, rowIdx, colIdx))"
-                class="text-background"/>
+                class="@FormInputText.BaseClass"/>
         }
     }
 </div>
 
 
 @code {
-    [Parameter, EditorRequired]
-    public GridComponent Grid { get; set; } = null!;
+    [CascadingParameter]
+    private GridComponent Grid { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public EventCallback<GridComponent> GridChanged { get; set; }
+    [CascadingParameter]
+    private EventCallback<GridComponent> GridChanged { get; set; }
 
     private string ColumnClass => Grid.Dimensions.Y switch
     {
@@ -32,9 +33,6 @@
     private async Task UpdateColumn(ChangeEventArgs args, int rowIdx, int colIdx)
     {
         Grid.Data[rowIdx][colIdx] = (string)args.Value!;
-
         await GridChanged.InvokeAsync(Grid);
     }
-
-
 }

@@ -1,4 +1,6 @@
-﻿@using Domain.Entities
+﻿@using System.Numerics
+@using Domain.Entities
+
 <div id="grid-edit-data" class="grid grid-cols-3 gap-1 bg-secondary p-2 rounded-lg w-fit"
      @onmouseleave="@(() => CurrentlyHovered = (-1, -1))">
 
@@ -23,20 +25,22 @@
 </div>
 
 @code {
-    [Parameter, EditorRequired]
-    public GridComponent Grid { get; set; } = null!;
+    [CascadingParameter]
+    private GridComponent Grid { get; set; } = null!;
 
-    [Parameter, EditorRequired]
-    public EventCallback<GridComponent> GridChanged { get; set; }
+    [CascadingParameter]
+    private EventCallback<GridComponent> GridChanged { get; set; }
 
     private (int Row, int Col) CurrentlyHovered { get; set; } = (-1, -1);
     private void CreateGrid(int currentRow, int currentCol)
     {
-        Grid.Dimensions = new(currentRow, currentCol);
+        Grid.Dimensions = new Vector2(currentRow, currentCol);
         Grid.Data = new string[currentRow][];
         for (var i = 0; i < currentRow; i++)
         {
             Grid.Data[i] = new string[currentCol];
         }
+
+        InvokeAsync(() => GridChanged.InvokeAsync(Grid));
     }
 }

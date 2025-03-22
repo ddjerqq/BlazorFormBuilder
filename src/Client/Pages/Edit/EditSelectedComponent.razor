@@ -14,10 +14,13 @@
         <FormDescription>Enter the description or leave empty</FormDescription>
     </FormField>
 
-    <FormField>
-        <FormLabel for="required">Required?</FormLabel>
-        <Switch id="required" @bind-Value="@Component.Required"/>
-    </FormField>
+    @if (Component is not (ButtonComponentChoice or GridComponent))
+    {
+        <FormField>
+            <FormLabel for="required">Required?</FormLabel>
+            <Switch id="required" @bind-Value="@Component.Required"/>
+        </FormField>
+    }
 
     @if (Component is TextInput textInput)
     {
@@ -160,8 +163,16 @@
 
     @if (Component is GridComponent gridInput)
     {
+        var callback = EventCallback.Factory.Create<GridComponent>(
+            Component,
+            async (grid) => await ComponentChanged.InvokeAsync(Component));
+
         <FormField>
-            <GridParent @bind-Grid="gridInput"/>
+            <CascadingValue Value="gridInput">
+                <CascadingValue Value="callback">
+                    <EditGrid @bind-Grid="gridInput"/>
+                </CascadingValue>
+            </CascadingValue>
         </FormField>
     }
 </AppForm>

@@ -1,0 +1,16 @@
+﻿@using System.Numerics
+@using Domain.Entities
+@using Client.Components.Ui.Form
+@inherits UiComponentBase
+
+<FormField>
+    <FormLabel>@(DimensionChosen ? "Edit data" : "Select size")</FormLabel>
+    <DynamicComponent Type="@(DimensionChosen ? typeof(EditGridData) : typeof(SelectGridDimensions))"/>
+</FormField>
+
+@code {
+    [CascadingParameter]
+    private GridComponent Grid { get; set; } = null!;
+
+    private bool DimensionChosen => Grid.Dimensions != new Vector2(0, 0);
+}

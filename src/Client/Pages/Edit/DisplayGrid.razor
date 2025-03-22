@@ -1,28 +1,22 @@
 ﻿@using Domain.Entities
 @inherits UiComponentBase
 
-<div class="grid @ColumnClass">
-    @foreach (var row in Grid.Data.Take(1))
+<div class="@($"grid {ColumnClass} gap-y-2 justify-stretch items-center"))">
+    @foreach (var (idx, row) in Grid.Data.Index())
     {
+        var isHeader = idx == 0;
+        var cellClass = isHeader
+            ? "font-bold border-b-2 border-primary"
+            : "text-primary/75 border-b border-primary/75";
+
         foreach (var col in row)
         {
-            <span class="font-bold">@col</span>
+            <span class="@cellClass">@col</span>
         }
     }
-
-    @foreach (var row in Grid.Data.Skip(1))
-    {
-        @foreach (var col in row)
-        {
-            <span class="text-primary divide-y divide-gray-50">@col</span>
-        }
-
-    }
-
 </div>
 
 @code {
-
     [Parameter, EditorRequired]
     public GridComponent Grid { get; set; } = null!;
 
@@ -32,7 +26,6 @@
         -1 or 1 => "grid-cols-1",
         2 => "grid-cols-2",
         3 => "grid-cols-3",
-        _ => throw new NotImplementedException()
+        _ => throw new NotImplementedException(),
     };
-
 }
