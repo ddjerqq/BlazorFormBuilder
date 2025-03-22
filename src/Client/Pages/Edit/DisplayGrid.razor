@@ -1,14 +1,24 @@
 ﻿@using Domain.Entities
 @inherits UiComponentBase
 
-<div class="grid @ColumnClass gap-1 justify-stretch">
-    @foreach (var row in Grid.Data)
+<div class="grid @ColumnClass">
+    @foreach (var row in Grid.Data.Take(1))
     {
         foreach (var col in row)
         {
-            <span class="text-primary">@col</span>
+            <span class="font-bold">@col</span>
         }
     }
+
+    @foreach (var row in Grid.Data.Skip(1))
+    {
+        @foreach (var col in row)
+        {
+            <span class="text-primary divide-y divide-gray-50">@col</span>
+        }
+
+    }
+
 </div>
 
 @code {
@@ -18,7 +28,8 @@
 
     private string ColumnClass => Grid.Dimensions.Y switch
     {
-        -1 or 0 or 1 => "grid-cols-1",
+        0 => "grid-cols-2",
+        -1 or 1 => "grid-cols-1",
         2 => "grid-cols-2",
         3 => "grid-cols-3",
         _ => throw new NotImplementedException()

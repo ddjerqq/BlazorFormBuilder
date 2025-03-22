@@ -57,7 +57,7 @@ public partial class Edit
         typeof(CheckboxInput),
         typeof(DateInput),
         typeof(ButtonComponentChoice),
-        typeof(GridComponent),
+        typeof(Domain.Entities.GridComponent),
     ];
 
     private BaseComponentChoice? CurrentlyEditing { get; set; }

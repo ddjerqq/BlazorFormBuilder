@@ -4,7 +4,7 @@ namespace Domain.Entities;
 
 public sealed class GridComponent : BaseComponentChoice
 {
-    public Vector2 Dimensions { get; set; } = new(2, 2);
+    public Vector2 Dimensions { get; set; } = new(0, 0);
 
     public string[][] Data { get; set; } =
     [

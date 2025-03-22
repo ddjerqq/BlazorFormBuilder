@@ -1,0 +1,36 @@
+﻿@using System.Numerics
+@using Domain.Entities
+@using Client.Components.Ui.Form
+@inherits UiComponentBase
+
+
+<FormField>
+    <FormLabel>
+        @if (DimensionChosen)
+        {
+            <GridEditor Grid="Grid" GridChanged="OnGridChanged"/>
+        }
+        else
+        {
+            <GridSizeSelect @bind-Grid="Grid" />
+        }
+    </FormLabel>
+</FormField>
+
+@code {
+    [Parameter, EditorRequired]
+    public GridComponent Grid { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<GridComponent> GridChanged { get; set; }
+    private Task OnGridChanged(GridComponent updatedGrid)
+    {
+        Grid = updatedGrid;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
+    private bool DimensionChosen => Grid.Dimensions != new Vector2(0, 0);
+
+
+}
