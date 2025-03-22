@@ -18,7 +18,7 @@
 
 @code {
     [Parameter, EditorRequired]
-    public GridComponent Grid { get; set; } = null!;
+    public GridComponentChoice Grid { get; set; } = null!;
 
     private string ColumnClass => Grid.Dimensions.Y switch
     {

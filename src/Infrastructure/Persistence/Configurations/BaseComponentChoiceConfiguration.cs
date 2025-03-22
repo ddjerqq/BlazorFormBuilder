@@ -19,7 +19,7 @@ public sealed class BaseComponentChoiceConfiguration : IEntityTypeConfiguration<
             .HasValue<NumberInput>("number")
             .HasValue<SelectInput>("select")
             .HasValue<TextInput>("text")
-            .HasValue<GridComponent>("grid");
+            .HasValue<GridComponentChoice>("grid");
 
         builder.HasOne<UserForm>()
             .WithMany(form => form.Fields)

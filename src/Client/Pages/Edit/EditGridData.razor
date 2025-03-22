@@ -16,10 +16,10 @@
 
 @code {
     [CascadingParameter]
-    private GridComponent Grid { get; set; } = null!;
+    private GridComponentChoice Grid { get; set; } = null!;
 
     [CascadingParameter]
-    private EventCallback<GridComponent> GridChanged { get; set; }
+    private EventCallback<GridComponentChoice> GridChanged { get; set; }
 
     private string ColumnClass => Grid.Dimensions.Y switch
     {

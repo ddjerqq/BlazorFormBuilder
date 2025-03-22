@@ -54,7 +54,7 @@ public abstract class BaseComponentChoice
             Label = "Button",
         },
 
-        nameof(GridComponent) => new GridComponent()
+        nameof(GridComponentChoice) => new GridComponentChoice()
         {
             FormId = formId,
             Label = "Grid",

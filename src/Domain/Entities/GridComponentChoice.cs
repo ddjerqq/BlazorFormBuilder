@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public sealed class GridComponent : BaseComponentChoice
+public sealed class GridComponentChoice : BaseComponentChoice
 {
     public Vector2 Dimensions { get; set; } = new(0, 0);
 

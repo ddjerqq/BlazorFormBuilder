@@ -26,10 +26,10 @@
 
 @code {
     [CascadingParameter]
-    private GridComponent Grid { get; set; } = null!;
+    private GridComponentChoice Grid { get; set; } = null!;
 
     [CascadingParameter]
-    private EventCallback<GridComponent> GridChanged { get; set; }
+    private EventCallback<GridComponentChoice> GridChanged { get; set; }
 
     private (int Row, int Col) CurrentlyHovered { get; set; } = (-1, -1);
     private void CreateGrid(int currentRow, int currentCol)
