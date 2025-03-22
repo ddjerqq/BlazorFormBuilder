@@ -1,0 +1,31 @@
+﻿@using Domain.Entities
+@inherits UiComponentBase
+
+<div class="@($"grid {ColumnClass} gap-y-2 justify-stretch items-center"))">
+    @foreach (var (idx, row) in Grid.Data.Index())
+    {
+        var isHeader = idx == 0;
+        var cellClass = isHeader
+            ? "font-bold border-b-2 border-primary"
+            : "text-primary/75 border-b border-primary/75";
+
+        foreach (var col in row)
+        {
+            <span class="@cellClass">@col</span>
+        }
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public GridComponentChoice Grid { get; set; } = null!;
+
+    private string ColumnClass => Grid.Dimensions.Y switch
+    {
+        0 => "grid-cols-2",
+        -1 or 1 => "grid-cols-1",
+        2 => "grid-cols-2",
+        3 => "grid-cols-3",
+        _ => throw new NotImplementedException(),
+    };
+}

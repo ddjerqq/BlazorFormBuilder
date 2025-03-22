@@ -34,6 +34,7 @@ public abstract class BaseComponentChoice
             Choices = [],
             Label = "Select",
         },
+
         nameof(CheckboxInput) => new CheckboxInput
         {
             FormId = formId,
@@ -51,6 +52,12 @@ public abstract class BaseComponentChoice
             ButtonType = "button",
             ButtonText = "Submit",
             Label = "Button",
+        },
+
+        nameof(GridComponentChoice) => new GridComponentChoice()
+        {
+            FormId = formId,
+            Label = "Grid",
         },
         _ => throw new ArgumentException("Invalid component type"),
     };

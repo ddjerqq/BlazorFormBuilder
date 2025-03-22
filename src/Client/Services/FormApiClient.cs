@@ -8,9 +8,9 @@ namespace Client.Services;
 
 public sealed class FormApiClient(HttpClient http)
 {
-    private static JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+    private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
     {
-        Converters = { new BaseComponentChoiceConverter() },
+        Converters = { new BaseComponentChoiceConverter(), new Vec2StringJsonConverter() },
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
     };
 

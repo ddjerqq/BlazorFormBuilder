@@ -54,6 +54,11 @@
         </Button>
     }
 
+    @if (Component is GridComponentChoice gridInput)
+    {
+        <DisplayGrid Grid="gridInput"></DisplayGrid>
+    }
+
     @if (!string.IsNullOrWhiteSpace(Component.Description))
     {
         <FormDescription>@Component.Description</FormDescription>

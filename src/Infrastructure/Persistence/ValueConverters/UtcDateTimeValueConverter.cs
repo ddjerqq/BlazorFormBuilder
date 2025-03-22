@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Persistence.ValueConverters;
+namespace Infrastructure.Persistence.ValueConverters;
 
 public sealed class DateTimeToUtcDateTimeValueConverter()
     : ValueConverter<DateTime, DateTime>(
