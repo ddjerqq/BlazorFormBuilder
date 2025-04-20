@@ -17,6 +17,65 @@ namespace Infrastructure.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
+            modelBuilder.Entity("Application.Models.RefreshToken", b =>
+                {
+                    b.Property<Guid>("TokenId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("token_id");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("value");
+
+                    b.HasKey("TokenId")
+                        .HasName("p_k_refresh_token");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("i_x_refresh_token_user_id");
+
+                    b.ToTable("refresh_token");
+                });
+
+            modelBuilder.Entity("Domain.Aggregates.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("p_k_user");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("i_x_user_email");
+
+                    b.ToTable("user");
+                });
+
             modelBuilder.Entity("Domain.Aggregates.UserForm", b =>
                 {
                     b.Property<Guid>("Id")
@@ -38,8 +97,15 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("name");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
                     b.HasKey("Id")
                         .HasName("p_k_form");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("i_x_form_user_id");
 
                     b.ToTable("form");
                 });
@@ -222,6 +288,28 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("base_component_choice");
 
                     b.HasDiscriminator().HasValue("text");
+                });
+
+            modelBuilder.Entity("Application.Models.RefreshToken", b =>
+                {
+                    b.HasOne("Domain.Aggregates.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_refresh_token__users_user_id");
+                });
+
+            modelBuilder.Entity("Domain.Aggregates.UserForm", b =>
+                {
+                    b.HasOne("Domain.Aggregates.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("f_k_form_user_user_id");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Entities.BaseComponentChoice", b =>

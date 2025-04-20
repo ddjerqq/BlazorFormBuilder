@@ -1,0 +1,86 @@
+﻿@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Client.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Login</PageTitle>
+<div class="flex justify-center items-center">
+<Card class="w-[360px]">
+    <CardHeader>
+        <CardTitle>Login</CardTitle>
+        <CardDescription>Please enter your name and email to continue</CardDescription>
+    </CardHeader>
+    <CardContent class="w-[360px]">
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="space-y-4">
+                <div>
+                    <label for="name" class="block font-semibold mb-1">Name</label>
+                        <InputText id="name" @bind-Value="loginModel.Name" class="w-full px-4 py-2 border rounded-xl placeholder-gray-500 border" placeholder="Enter Name" />
+                </div>
+
+                <div>
+                    <label for="email" class="block font-semibold mb-1">Email</label>
+                        <InputText id="email" @bind-Value="loginModel.Email" class="w-full px-4 py-2 border rounded-xl placeholder-gray-500 border" placeholder="Email@example.com" />
+                </div>
+
+                <Button Type="submit" class="w-full mt-5 py-2">
+                    <Blazicon Svg="@Icons.LogIn" />
+                    Login
+                </Button>
+                <p class="mt-4 text-sm text-center">
+                    Don't have an account? <a href="/register" class="text-black-600 underline">Register here</a>
+                </p>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="text-red-500 mt-2">@errorMessage</div>
+                }
+            </div>
+        </EditForm>
+    </CardContent>
+</Card>
+</div>
+
+@code {
+    private LoginRequest loginModel = new();
+    private string? errorMessage;
+
+    private async Task HandleLogin()
+    {
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+
+            if (response.IsSuccessStatusCode)
+            {
+                ((CustomAuthStateProvider)AuthStateProvider).NotifyUserAuthentication();
+
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = "Invalid credentials.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred: {ex.Message}"; // ShowError/ShowWarning ar imushava adamianurad
+        }
+    }
+
+    public class LoginRequest
+    {
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+    }
+}

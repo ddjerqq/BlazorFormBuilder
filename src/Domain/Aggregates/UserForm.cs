@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Newtonsoft.Json;
 
 namespace Domain.Aggregates;
 
@@ -13,6 +14,12 @@ public sealed class UserForm
     public DateTime Modified { get; set; } = DateTime.UtcNow;
 
     public List<BaseComponentChoice> Fields { get; set; } = [];
+
+    //Relationships with User + nav property
+    [JsonIgnore]
+    public Guid UserId { get; set; }
+    [JsonIgnore]
+    public User User { get; set; } = null!;
 
     public void SortFields()
     {

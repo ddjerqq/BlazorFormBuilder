@@ -7,6 +7,7 @@ using Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
+using WebApi.Extensions;
 
 // load env vars
 DotEnv.Fluent().WithProbeForEnv(6).Load();
@@ -15,6 +16,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region application services
 
+builder.AddJWTAuthentication();
+builder.AddJwtGeneratorService();
+builder.AddEmailSenders();
+builder.AddCacheProvider();
+builder.AddOneTimePasswordService();
 builder.Services.AddMemoryCache();
 builder.Services.AddValidatorsFromAssembly(Application.Application.Assembly, includeInternalTypes: true);
 builder.Services.AddMediatR(cfg =>
@@ -66,7 +72,8 @@ app.UseHttpsRedirection();
 app.UseCors();
 
 app.UseRouting();
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 

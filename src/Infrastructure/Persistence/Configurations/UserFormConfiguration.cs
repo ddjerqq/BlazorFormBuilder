@@ -16,6 +16,12 @@ internal class UserFormConfiguration : IEntityTypeConfiguration<UserForm>
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
+
         builder.Navigation(form => form.Fields).AutoInclude();
+        builder.HasOne(form => form.User)
+            .WithMany()
+            .HasForeignKey(form => form.UserId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }

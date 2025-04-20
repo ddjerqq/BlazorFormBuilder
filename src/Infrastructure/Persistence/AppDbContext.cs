@@ -1,9 +1,11 @@
 using System.Reflection;
+using Application.Models;
 using Application.Services;
 using Domain.Aggregates;
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Persistence.ValueConverters;
 
 namespace Infrastructure.Persistence;
@@ -11,6 +13,13 @@ namespace Infrastructure.Persistence;
 public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IAppDbContext
 {
     public DbSet<UserForm> Forms => Set<UserForm>();
+    public DbSet<User> Users => Set<User>();
+
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public async Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken ct = default)
+    {
+        return await Database.BeginTransactionAsync(ct);
+    }
 
     public DbSet<BaseComponentChoice> BaseComponentChoices => Set<BaseComponentChoice>();
 
